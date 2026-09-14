@@ -15,6 +15,10 @@ const fraunces = Fraunces({
 export const metadata: Metadata = {
   title: "Innerlight — Vishal Gautam",
   description: "A luxury spiritual studio platform.",
+  icons: {
+    icon: "/icon.jpg",
+    apple: "/icon.jpg",
+  },
 };
 
 export default function RootLayout({
