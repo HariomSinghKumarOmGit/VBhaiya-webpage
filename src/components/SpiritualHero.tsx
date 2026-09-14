@@ -369,10 +369,42 @@ function WaterfallMist() {
   );
 }
 
-export default function SpiritualHero() {
+interface SpiritualHeroProps {
+  onReady?: () => void;
+}
+
+export default function SpiritualHero({ onReady }: SpiritualHeroProps) {
   const imgRef = useRef<HTMLImageElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const [isHoveringImage, setIsHoveringImage] = useState(false);
-  
+  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
+  const hasNotifiedReady = useRef(false);
+
+  useEffect(() => {
+    if ((isVideoLoaded && isImageLoaded) || (isVideoLoaded && typeof window !== "undefined")) {
+      if (!hasNotifiedReady.current) {
+        hasNotifiedReady.current = true;
+        if (onReady) {
+          onReady();
+        }
+      }
+    }
+  }, [isVideoLoaded, isImageLoaded, onReady]);
+
+  // Fallback timer: ensure site reveals within 3.5s max even on slow networks
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (!hasNotifiedReady.current) {
+        hasNotifiedReady.current = true;
+        if (onReady) {
+          onReady();
+        }
+      }
+    }, 3500);
+    return () => clearTimeout(timer);
+  }, [onReady]);
+
   // Image-local tracking for the X-Ray mask
   const mouseX = useMotionValue(-1000);
   const mouseY = useMotionValue(-1000);
@@ -389,6 +421,15 @@ export default function SpiritualHero() {
   const holeMask = useMotionTemplate`radial-gradient(circle at ${springX}px ${springY}px, transparent 0%, rgba(0,0,0,0.3) 35px, black 70px)`;
 
   useEffect(() => {
+    // Check if image is already cached/complete
+    if (imgRef.current?.complete) {
+      setIsImageLoaded(true);
+    }
+    // Check if video is already ready
+    if (videoRef.current && videoRef.current.readyState >= 3) {
+      setIsVideoLoaded(true);
+    }
+
     const handleMouseMove = (e: MouseEvent) => {
       // 1. Update global cursor
       cursorX.set(e.clientX);
@@ -429,11 +470,14 @@ export default function SpiritualHero() {
       >
         {/* Background Video */}
         <video
+          ref={videoRef}
           src="/bg video.mp4"
           autoPlay
           loop
           muted
           playsInline
+          onCanPlayThrough={() => setIsVideoLoaded(true)}
+          onLoadedData={() => setIsVideoLoaded(true)}
           className="absolute inset-0 w-full h-full object-cover"
         />
 
@@ -456,6 +500,7 @@ export default function SpiritualHero() {
             ref={imgRef}
             src="/top layer.png"
             alt="Top Layer Foreground"
+            onLoad={() => setIsImageLoaded(true)}
             className="absolute left-1/2 -translate-x-1/2 max-w-none pointer-events-auto"
             onMouseEnter={() => setIsHoveringImage(true)}
             onMouseLeave={() => setIsHoveringImage(false)}

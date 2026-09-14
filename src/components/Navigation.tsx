@@ -70,7 +70,7 @@ export default function Navigation() {
             <ul className="list-none text-center m-0 p-0">
               {[
                 { label: "Home", href: "/" },
-                { label: "Philosophy", href: "/philosophy" },
+                { label: "Scriptures", href: "/scriptures" },
                 { label: "Calendar", href: "/calendar" },
                 { label: "Programs", href: "/programs" },
                 { label: "Journal", href: "/journal" },
