@@ -52,6 +52,20 @@ function WaterfallMist() {
       mouse.lastY = currentY;
     };
 
+    const onTouchMove = (e: TouchEvent) => {
+      if (e.touches.length > 0) {
+        const rect = canvas.getBoundingClientRect();
+        const currentX = e.touches[0].clientX - rect.left;
+        const currentY = e.touches[0].clientY - rect.top;
+        mouse.vx = (currentX - mouse.lastX) * 0.25;
+        mouse.vy = (currentY - mouse.lastY) * 0.25;
+        mouse.x = currentX;
+        mouse.y = currentY;
+        mouse.lastX = currentX;
+        mouse.lastY = currentY;
+      }
+    };
+
     const onMouseLeave = () => {
       mouse.x = -1000;
       mouse.y = -1000;
@@ -59,8 +73,10 @@ function WaterfallMist() {
       mouse.vy = 0;
     };
 
-    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("mousemove", onMouseMove, { passive: true });
     window.addEventListener("mouseleave", onMouseLeave);
+    window.addEventListener("touchmove", onTouchMove, { passive: true });
+    window.addEventListener("touchend", onMouseLeave);
 
     // 1. BILLOW CLOUDS (Rolling, expanding vapor clouds)
     type Billow = {
@@ -451,16 +467,47 @@ export default function SpiritualHero({ onReady }: SpiritualHeroProps) {
       setIsHoveringImage(false);
     };
 
-    window.addEventListener("mousemove", handleMouseMove);
+    const handleTouchMove = (e: TouchEvent) => {
+      if (e.touches.length > 0) {
+        const touch = e.touches[0];
+        cursorX.set(touch.clientX);
+        cursorY.set(touch.clientY);
+        if (imgRef.current) {
+          const rect = imgRef.current.getBoundingClientRect();
+          mouseX.set(touch.clientX - rect.left);
+          mouseY.set(touch.clientY - rect.top);
+          setIsHoveringImage(
+            touch.clientX >= rect.left &&
+            touch.clientX <= rect.right &&
+            touch.clientY >= rect.top &&
+            touch.clientY <= rect.bottom
+          );
+        }
+      }
+    };
+
+    const handleTouchEnd = () => {
+      mouseX.set(-1000);
+      mouseY.set(-1000);
+      cursorX.set(-1000);
+      cursorY.set(-1000);
+      setIsHoveringImage(false);
+    };
+
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
     window.addEventListener("mouseleave", handleMouseLeave);
+    window.addEventListener("touchmove", handleTouchMove, { passive: true });
+    window.addEventListener("touchend", handleTouchEnd);
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseleave", handleMouseLeave);
+      window.removeEventListener("touchmove", handleTouchMove);
+      window.removeEventListener("touchend", handleTouchEnd);
     };
-  }, [mouseX, mouseY]);
+  }, [mouseX, mouseY, cursorX, cursorY]);
 
   return (
-    <section className="relative h-[100svh] min-h-[620px] w-full overflow-hidden flex items-center justify-center bg-black cursor-none">
+    <section className="relative h-[100svh] min-h-[560px] sm:min-h-[620px] w-full overflow-hidden flex items-center justify-center bg-black cursor-default md:cursor-none select-none">
       {/* 
          SHARED MEDIA WRAPPER
       */}
@@ -494,7 +541,7 @@ export default function SpiritualHero({ onReady }: SpiritualHeroProps) {
         >
           {/* 
               IMAGE: Interactive X-Ray Hover Mask
-              Follows the mouse to create an opacity 0 hole.
+              Follows the mouse/touch to create an opacity 0 hole.
           */}
           <motion.img
             ref={imgRef}
@@ -519,13 +566,13 @@ export default function SpiritualHero({ onReady }: SpiritualHeroProps) {
       {/* Moving Waterfall Mist & Smoke at bottom */}
       <WaterfallMist />
 
-      {/* Hero Text Overlay — Positioned at Bottom Middle */}
-      <div className="absolute bottom-[90px] left-1/2 -translate-x-1/2 z-[25] text-center w-full max-w-2xl px-4 pointer-events-none flex flex-col items-center justify-center">
+      {/* Hero Text Overlay — Positioned at Bottom Middle with Responsive Sizing */}
+      <div className="absolute bottom-[75px] sm:bottom-[90px] left-1/2 -translate-x-1/2 z-[25] text-center w-full max-w-2xl px-5 sm:px-6 pointer-events-none flex flex-col items-center justify-center">
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.4, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          className="text-[0.78rem] md:text-[0.85rem] tracking-[0.18em] mb-2 uppercase font-medium"
+          className="text-[0.72rem] sm:text-[0.82rem] md:text-[0.85rem] tracking-[0.15em] sm:tracking-[0.18em] mb-1.5 sm:mb-2 uppercase font-medium"
           style={{
             color: "rgba(240, 225, 195, 0.95)",
             textShadow: "0 2px 10px rgba(0,0,0,0.85), 0 1px 4px rgba(0,0,0,0.9)",
@@ -537,9 +584,9 @@ export default function SpiritualHero({ onReady }: SpiritualHeroProps) {
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.6, delay: 0.55, ease: [0.22, 1, 0.36, 1] }}
-          className="font-serif leading-[1.0]"
+          className="font-serif leading-[1.05]"
           style={{
-            fontSize: "clamp(2.2rem, 5.5vw, 4.4rem)",
+            fontSize: "clamp(2.1rem, 7vw, 4.4rem)",
             color: "#F6F3EC",
             textShadow: "0 4px 28px rgba(0,0,0,0.95), 0 2px 8px rgba(0,0,0,0.9)",
           }}
@@ -553,7 +600,7 @@ export default function SpiritualHero({ onReady }: SpiritualHeroProps) {
       <div
         className="absolute bottom-0 left-0 right-0 z-[18] pointer-events-none"
         style={{
-          height: "28%",
+          height: "26%",
           background: "linear-gradient(to bottom, transparent 0%, rgba(13,11,8,0.65) 50%, #0d0b08 100%)",
         }}
       />
@@ -563,11 +610,11 @@ export default function SpiritualHero({ onReady }: SpiritualHeroProps) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.8, duration: 1 }}
-        className="absolute bottom-[24px] left-1/2 -translate-x-1/2 z-[30] flex flex-col items-center gap-1.5 pointer-events-none"
-        style={{ color: "rgba(217,190,135,0.85)", fontSize: "0.68rem", letterSpacing: "0.1em" }}
+        className="absolute bottom-[20px] sm:bottom-[24px] left-1/2 -translate-x-1/2 z-[30] flex flex-col items-center gap-1 sm:gap-1.5 pointer-events-none"
+        style={{ color: "rgba(217,190,135,0.85)", fontSize: "0.64rem", letterSpacing: "0.1em" }}
       >
         <span>SCROLL</span>
-        <div style={{ width: 1, height: 26, background: "rgba(184,147,74,0.4)", position: "relative", overflow: "hidden" }}>
+        <div style={{ width: 1, height: 22, background: "rgba(184,147,74,0.4)", position: "relative", overflow: "hidden" }}>
           <motion.div
             animate={{ y: ["-100%", "100%"] }}
             transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
@@ -575,9 +622,10 @@ export default function SpiritualHero({ onReady }: SpiritualHeroProps) {
           />
         </div>
       </motion.div>
-      {/* Fluid Borderless Custom Cursor (Glows golden on hover over image) */}
+
+      {/* Fluid Borderless Custom Cursor (Desktop only, glows golden on hover over image) */}
       <motion.div
-        className="fixed top-0 left-0 z-[100] pointer-events-none"
+        className="hidden md:block fixed top-0 left-0 z-[100] pointer-events-none"
         style={{
           width: 140,
           height: 140,

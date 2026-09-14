@@ -14,6 +14,7 @@ interface Particle {
 
 export default function LuxuryCursor() {
   const [mounted, setMounted] = useState(false);
+  const [isFinePointer, setIsFinePointer] = useState(false);
   const [inHero, setInHero] = useState(true);
   const [isPointer, setIsPointer] = useState(false);
   const [isDarkBg, setIsDarkBg] = useState(false);
@@ -36,6 +37,9 @@ export default function LuxuryCursor() {
 
   useEffect(() => {
     setMounted(true);
+    const hasFinePointer = window.matchMedia("(pointer: fine)").matches;
+    setIsFinePointer(hasFinePointer);
+    if (!hasFinePointer) return;
 
     const checkHeroSection = () => {
       const heroEl = document.querySelector("section");
@@ -120,7 +124,7 @@ export default function LuxuryCursor() {
     };
   }, [inHero, mouseX, mouseY]);
 
-  if (!mounted) return null;
+  if (!mounted || !isFinePointer) return null;
 
   // When inside hero section, the hero has its own custom fluid x-ray cursor
   const showCustomCursor = !inHero;

@@ -184,6 +184,7 @@ function StaggeredCard({
 
   return (
     <motion.div
+      onClick={() => onOpenModal(card)}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       whileHover={{ y: -4, scale: 1.02 }}
@@ -268,7 +269,7 @@ function StaggeredCard({
               transition: "color 0.3s",
             }}
           >
-            {isHovering ? "Hold 2s to open →" : "Hover to preview"}
+            {isHovering ? "Hold 2s to open →" : "Tap or hover to view →"}
           </span>
         </div>
       </div>

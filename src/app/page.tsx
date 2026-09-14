@@ -44,17 +44,17 @@ export default function Home() {
       {/* ── Calendar Section ── */}
       <section
         id="calendar"
-        className="relative bg-[#F6F3EC] py-[110px] pb-[130px]"
+        className="relative bg-[#F6F3EC] py-16 sm:py-[110px] pb-20 sm:pb-[130px]"
       >
-        <div className="max-w-[1040px] mx-auto px-7">
-          <div className="mb-14">
-            <div className="text-[0.82rem] tracking-[0.1em] text-gold mb-3.5 uppercase font-medium">
+        <div className="max-w-[1040px] mx-auto px-4 sm:px-7">
+          <div className="mb-8 sm:mb-14">
+            <div className="text-[0.78rem] sm:text-[0.82rem] tracking-[0.1em] text-gold mb-2.5 sm:mb-3.5 uppercase font-medium">
               The calendar
             </div>
-            <h2 className="font-serif text-[clamp(2rem,4vw,2.9rem)] max-w-[480px] leading-[1.15] text-ink">
+            <h2 className="font-serif text-[clamp(1.9rem,4vw,2.9rem)] max-w-[480px] leading-[1.15] text-ink">
               Where the practice stands today.
             </h2>
-            <p className="mt-4 text-[0.98rem] leading-[1.7] text-ink-soft max-w-[440px]">
+            <p className="mt-3 sm:mt-4 text-[0.92rem] sm:text-[0.98rem] leading-[1.65] text-ink-soft max-w-[440px]">
               Each week follows the pull of the moon — what's ongoing, what's
               ending, and what the next Purnima or Amavasya is asking of us.
             </p>
