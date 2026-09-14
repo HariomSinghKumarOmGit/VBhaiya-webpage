@@ -3,31 +3,47 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function Navigation() {
+  const pathname = usePathname();
   const [showNav, setShowNav] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > window.innerHeight * 0.55) {
+      if (pathname !== "/" || window.scrollY > window.innerHeight * 0.55) {
         setShowNav(true);
       } else {
         setShowNav(false);
       }
     };
+    handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [pathname]);
+
+  // Close menu on ESC key press
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setMenuOpen(false);
+      }
+    };
+    if (menuOpen) {
+      window.addEventListener("keydown", handleKeyDown);
+    }
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [menuOpen]);
 
   return (
     <>
       <motion.nav
         initial={{ opacity: 0, y: -20 }}
         animate={{
-          opacity: showNav ? 1 : 0,
-          y: showNav ? 0 : -20,
-          pointerEvents: showNav ? "auto" : "none",
+          opacity: showNav || menuOpen ? 1 : 0,
+          y: showNav || menuOpen ? 0 : -20,
+          pointerEvents: showNav || menuOpen ? "auto" : "none",
         }}
         transition={{ duration: 0.7, ease: "easeOut" }}
         className="fixed top-[22px] left-1/2 -translate-x-1/2 flex items-center justify-between gap-7 px-4 py-3 w-[min(560px,88vw)] rounded-full bg-ivory/55 backdrop-blur-[18px] backdrop-saturate-140 border border-white/50 shadow-[0_8px_32px_rgba(27,24,18,0.08)] z-[200]"
@@ -64,10 +80,14 @@ export default function Navigation() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.6, ease: "easeInOut" }}
-            className="fixed inset-0 z-[190] bg-charcoal flex items-center justify-center"
+            transition={{ duration: 0.5, ease: "easeInOut" }}
+            onClick={() => setMenuOpen(false)}
+            className="fixed inset-0 z-[190] bg-charcoal/95 backdrop-blur-md flex items-center justify-center cursor-pointer select-none"
           >
-            <ul className="list-none text-center m-0 p-0">
+            <ul
+              className="list-none text-center m-0 p-0"
+              onClick={(e) => e.stopPropagation()}
+            >
               {[
                 { label: "Home", href: "/" },
                 { label: "Scriptures", href: "/scriptures" },
@@ -82,15 +102,15 @@ export default function Navigation() {
                     animate={{ y: 0 }}
                     exit={{ y: "110%" }}
                     transition={{
-                      duration: 0.6,
+                      duration: 0.5,
                       ease: [0.22, 1, 0.36, 1],
-                      delay: i * 0.06,
+                      delay: i * 0.05,
                     }}
                   >
                     <Link
                       href={item.href}
                       onClick={() => setMenuOpen(false)}
-                      className="font-serif text-[clamp(2rem,6vw,3.2rem)] text-ivory-2 no-underline inline-block transition-colors duration-300 hover:text-gold-soft"
+                      className="font-serif text-[clamp(2rem,6vw,3.2rem)] text-ivory-2 no-underline inline-block transition-colors duration-300 hover:text-gold-soft cursor-pointer"
                     >
                       {item.label}
                     </Link>
