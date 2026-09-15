@@ -12,10 +12,12 @@
 
   --font-sans: "Manrope", sans-serif;
   --font-serif: "Fraunces", serif;
+  --font-devanagari: var(--font-devanagari), "Noto Sans Devanagari", "Rozha One", sans-serif;
 
   --animate-drift: drift 14s ease-in-out infinite alternate;
   --animate-drift2: drift2 18s ease-in-out infinite alternate;
   --animate-sc: sc 2.4s ease-in-out infinite;
+  --animate-marquee: marquee 40s linear infinite;
 
   @keyframes drift {
     0% { transform: translate(0, 0) scale(1); }
@@ -29,6 +31,10 @@
     0% { top: -100%; }
     60% { top: 100%; }
     100% { top: 100%; }
+  }
+  @keyframes marquee {
+    0% { transform: translateX(0%); }
+    100% { transform: translateX(-50%); }
   }
 }
 
@@ -50,7 +56,31 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+[data-lang="hi"] {
+  font-family: var(--font-devanagari), var(--font-sans);
+}
+
 ::selection {
   background-color: var(--color-gold-soft);
   color: var(--color-ink);
+}
+
+@keyframes marquee-infinite {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-marquee-infinite {
+  display: flex !important;
+  width: max-content !important;
+  animation: marquee-infinite 36s linear infinite !important;
+  will-change: transform;
+}
+
+.animate-marquee-infinite:hover {
+  animation-play-state: paused !important;
 }

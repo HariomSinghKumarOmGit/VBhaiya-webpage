@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, useMotionValue, useSpring, useMotionTemplate } from "framer-motion";
+import { useLanguage } from "@/context/LanguageContext";
 
 // ==================================================
 // WATERFALL MIST & ROLLING SMOKE CANVAS
@@ -390,6 +391,7 @@ interface SpiritualHeroProps {
 }
 
 export default function SpiritualHero({ onReady }: SpiritualHeroProps) {
+  const { language } = useLanguage();
   const imgRef = useRef<HTMLImageElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isHoveringImage, setIsHoveringImage] = useState(false);
@@ -578,7 +580,9 @@ export default function SpiritualHero({ onReady }: SpiritualHeroProps) {
             textShadow: "0 2px 10px rgba(0,0,0,0.85), 0 1px 4px rgba(0,0,0,0.9)",
           }}
         >
-          A quiet practice, held by Vishal Gautam
+          {language === "hi"
+            ? "विशाल गौतम द्वारा आयोजित पावन आध्यात्मिक साधना"
+            : "A quiet practice, held by Vishal Gautam"}
         </motion.div>
         <motion.h1
           initial={{ opacity: 0, y: 18 }}
@@ -591,8 +595,17 @@ export default function SpiritualHero({ onReady }: SpiritualHeroProps) {
             textShadow: "0 4px 28px rgba(0,0,0,0.95), 0 2px 8px rgba(0,0,0,0.9)",
           }}
         >
-          Find your{" "}
-          <em style={{ fontStyle: "italic", color: "#D4AF37" }}>innerlight</em>
+          {language === "hi" ? (
+            <>
+              अपने भीतर का{" "}
+              <em style={{ fontStyle: "italic", color: "#D4AF37" }}>अंतर्प्रकाश</em> खोजें
+            </>
+          ) : (
+            <>
+              Find your{" "}
+              <em style={{ fontStyle: "italic", color: "#D4AF37" }}>innerlight</em>
+            </>
+          )}
         </motion.h1>
       </div>
 
@@ -613,7 +626,7 @@ export default function SpiritualHero({ onReady }: SpiritualHeroProps) {
         className="absolute bottom-[20px] sm:bottom-[24px] left-1/2 -translate-x-1/2 z-[30] flex flex-col items-center gap-1 sm:gap-1.5 pointer-events-none"
         style={{ color: "rgba(217,190,135,0.85)", fontSize: "0.64rem", letterSpacing: "0.1em" }}
       >
-        <span>SCROLL</span>
+        <span>{language === "hi" ? "नीचे स्क्रॉल करें" : "SCROLL"}</span>
         <div style={{ width: 1, height: 22, background: "rgba(184,147,74,0.4)", position: "relative", overflow: "hidden" }}>
           <motion.div
             animate={{ y: ["-100%", "100%"] }}

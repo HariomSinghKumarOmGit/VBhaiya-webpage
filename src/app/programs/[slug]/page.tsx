@@ -1,12 +1,42 @@
-import { createClient } from '@/utils/supabase/server';
-import { notFound } from 'next/navigation';
+import { createClient } from "@/utils/supabase/server";
+import { notFound } from "next/navigation";
+import { getSadhanaBySlug, SADHANAS_DATA } from "@/data/sadhanas";
+import SadhanaDetailView from "@/components/SadhanaDetailView";
 
-export default async function ProgramDetail({ params }: { params: { slug: string } }) {
+export async function generateStaticParams() {
+  return SADHANAS_DATA.map((s) => ({
+    slug: s.slug,
+  }));
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const sadhana = getSadhanaBySlug(slug);
+  if (sadhana) {
+    return {
+      title: `${sadhana.title} (${sadhana.durationLabel}) | Innerlight`,
+      description: sadhana.summary,
+    };
+  }
+  return {
+    title: "Sadhana Details | Innerlight",
+  };
+}
+
+export default async function ProgramDetail({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+
+  // Check built-in sadhanas first
+  const sadhana = getSadhanaBySlug(slug);
+  if (sadhana) {
+    return <SadhanaDetailView sadhana={sadhana} />;
+  }
+
+  // Otherwise check Supabase
   const supabase = await createClient();
-  
   let program = null;
   try {
-    const { data } = await supabase.from('programs').select('*').eq('slug', params.slug).single();
+    const { data } = await supabase.from("programs").select("*").eq("slug", slug).single();
     program = data;
   } catch (e) {
     console.warn("Supabase not fully configured yet.");
@@ -20,7 +50,12 @@ export default async function ProgramDetail({ params }: { params: { slug: string
     <main className="min-h-screen py-[150px] px-7 max-w-[800px] mx-auto">
       <div className="mb-12">
         <div className="text-gold text-[0.85rem] tracking-[0.06em] mb-4 uppercase">
-          {program.start_date && new Date(program.start_date).toLocaleDateString('en-IN', { month: 'long', day: 'numeric', year: 'numeric' })}
+          {program.start_date &&
+            new Date(program.start_date).toLocaleDateString("en-IN", {
+              month: "long",
+              day: "numeric",
+              year: "numeric",
+            })}
         </div>
         <h1 className="font-serif text-[clamp(2.5rem,5vw,4rem)] leading-[1.1] mb-6">{program.title}</h1>
         <p className="text-xl text-ink-soft leading-relaxed">{program.summary}</p>
@@ -32,15 +67,18 @@ export default async function ProgramDetail({ params }: { params: { slug: string
         </div>
       )}
 
-      <div className="prose prose-lg prose-stone max-w-none mb-16" dangerouslySetInnerHTML={{ __html: program.description || '' }} />
+      <div
+        className="prose prose-lg prose-stone max-w-none mb-16"
+        dangerouslySetInnerHTML={{ __html: program.description || "" }}
+      />
 
       {program.booking_link && (
         <div className="bg-ivory-2 rounded-[28px] p-10 text-center">
           <h3 className="font-serif text-2xl mb-4">Join this program</h3>
           <p className="text-ink-soft mb-8">Secure your spot for {program.title}</p>
-          <a 
-            href={program.booking_link} 
-            target="_blank" 
+          <a
+            href={program.booking_link}
+            target="_blank"
             rel="noopener noreferrer"
             className="inline-block bg-ink text-ivory px-8 py-4 rounded-full tracking-[0.05em] uppercase text-sm hover:bg-gold transition-colors"
           >

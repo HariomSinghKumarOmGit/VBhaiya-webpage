@@ -32,7 +32,7 @@ export function fmt(date: Date, opts?: Intl.DateTimeFormatOptions) {
 }
 
 export interface SacredTithiInfo {
-  type: 'amavasya' | 'purnima' | 'kaal_ashtami' | 'kaal_ratri' | 'ekadashi' | 'pradosha' | 'shivratri';
+  type: 'amavasya' | 'purnima' | 'kaal_ashtami' | 'ekadashi';
   title: string;
   shortTitle: string;
   icon: string;
@@ -448,21 +448,15 @@ export function getMonthSacredDates(year: number, month: number) {
   const amavasyaDays = findLocalPeakDays(0);
   const purnimaDays = findLocalPeakDays(SYNODIC / 2);
   const kaalAshtamiDays = findLocalPeakDays(SYNODIC / 2 + 7.38);
-  const kaalRatriDays = findLocalPeakDays(SYNODIC / 2 + 6.38);
   const shuklaEkadashiDays = findLocalPeakDays(10.8);
   const krishnaEkadashiDays = findLocalPeakDays(25.5);
   const allEkadashiDays = Array.from(new Set([...shuklaEkadashiDays, ...krishnaEkadashiDays]));
-  const pradoshaDays = Array.from(new Set([...findLocalPeakDays(12.8), ...findLocalPeakDays(27.5)]));
-  const shivratriDays = findLocalPeakDays(28.5);
 
   return {
     amavasya: amavasyaDays,
     purnima: purnimaDays,
     kaalAshtami: kaalAshtamiDays,
-    kaalRatri: kaalRatriDays,
     ekadashi: allEkadashiDays,
-    pradosha: pradoshaDays,
-    shivratri: shivratriDays,
   };
 }
 
@@ -530,34 +524,6 @@ export function getSacredTithiForDate(date: Date): SacredTithiInfo | null {
       bgColor: '#065F46',
       borderColor: '#10B981',
       accentBg: 'linear-gradient(135deg, #065F46 0%, #047857 100%)',
-    };
-  }
-  if (sacredDates.pradosha.includes(day)) {
-    return {
-      type: 'pradosha',
-      title: 'Pradosha 🔱',
-      shortTitle: 'Pradosha Vrat',
-      icon: '🔱',
-      badge: 'Pradosha Vrat',
-      description: 'Twilight Shiva worship. Chanting during sunset frees the mind from karmic bonds.',
-      color: '#E0E7FF',
-      bgColor: '#312E81',
-      borderColor: '#6366F1',
-      accentBg: 'linear-gradient(135deg, #312E81 0%, #3730A3 100%)',
-    };
-  }
-  if (sacredDates.shivratri.includes(day)) {
-    return {
-      type: 'shivratri',
-      title: 'Masik Shivratri 🕉️',
-      shortTitle: 'Shivratri',
-      icon: '🕉️',
-      badge: 'Masik Shivratri',
-      description: 'Night of Shiva sadhana before Amavasya. Deep meditative stillness.',
-      color: '#EDE9FE',
-      bgColor: '#3B0764',
-      borderColor: '#8B5CF6',
-      accentBg: 'linear-gradient(135deg, #3B0764 0%, #581C87 100%)',
     };
   }
 

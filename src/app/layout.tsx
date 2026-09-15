@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { Manrope, Fraunces } from "next/font/google";
+import { Manrope, Fraunces, Noto_Sans_Devanagari } from "next/font/google";
 import "./globals.css";
+import { LanguageProvider } from "@/context/LanguageContext";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -10,6 +11,12 @@ const manrope = Manrope({
 const fraunces = Fraunces({
   subsets: ["latin"],
   variable: "--font-serif",
+});
+
+const notoDevanagari = Noto_Sans_Devanagari({
+  subsets: ["devanagari"],
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-devanagari",
 });
 
 export const metadata: Metadata = {
@@ -29,9 +36,11 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body
-        className={`${manrope.variable} ${fraunces.variable} font-sans`}
+        className={`${manrope.variable} ${fraunces.variable} ${notoDevanagari.variable} font-sans`}
       >
-        {children}
+        <LanguageProvider>
+          {children}
+        </LanguageProvider>
       </body>
     </html>
   );

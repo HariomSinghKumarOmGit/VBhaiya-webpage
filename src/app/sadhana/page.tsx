@@ -1,13 +1,13 @@
 import SadhanaListClient from "@/components/SadhanaListClient";
 import Link from "next/link";
-import { LucideFlame, LucideCompass } from "lucide-react";
+import { LucideFlame } from "lucide-react";
 
 export const metadata = {
-  title: "Sacred Sadhanas & Cycles | Innerlight",
+  title: "Sacred Sadhanas | Innerlight",
   description: "Explore sacred sadhanas: 41-Day Master Cycle starting 4th of September, 21-Day Shree Vishnu Bhagwan Sadhana, and 33-Day Durga Maa Shakti Sadhana.",
 };
 
-export default function ProgramsPage() {
+export default function SadhanaPage() {
   return (
     <main className="min-h-screen py-[120px] sm:py-[150px] px-4 sm:px-7 max-w-[1140px] mx-auto">
       {/* ── Header ── */}
