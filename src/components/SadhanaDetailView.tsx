@@ -111,13 +111,30 @@ export default function SadhanaDetailView({ sadhana }: { sadhana: SadhanaItem })
       </div>
 
       {/* ── Sacred Overview ── */}
-      <div className="bg-white/80 border border-ink/6 rounded-[28px] sm:rounded-[32px] p-6 sm:p-8 mb-12">
+      <div className="bg-white/80 border border-ink/6 rounded-[28px] sm:rounded-[32px] p-6 sm:p-8 mb-8">
         <h2 className="font-serif text-2xl sm:text-3xl text-ink mb-4">
           {isHi ? "साधना का रहस्य व महत्व" : "Significance & Spiritual Depth"}
         </h2>
         <p className="text-ink-soft text-base sm:text-lg leading-relaxed">
           {isHi ? sadhana.overviewHi : sadhana.overview}
         </p>
+      </div>
+
+      {/* ── Important Healer Notice ── */}
+      <div className="flex items-start sm:items-center gap-3.5 p-4 sm:p-5 rounded-2xl sm:rounded-[24px] bg-amber-50 border border-amber-300/80 mb-12 shadow-2xs">
+        <div className="w-9 h-9 rounded-xl bg-amber-500/15 text-[#9E7326] flex items-center justify-center shrink-0 mt-0.5 sm:mt-0">
+          <LucideSparkles className="w-5 h-5 text-gold" />
+        </div>
+        <div className="text-xs sm:text-sm text-ink leading-relaxed">
+          <span className="font-bold text-amber-900 uppercase tracking-wide mr-1.5 text-[0.72rem] sm:text-xs bg-amber-200/60 px-2 py-0.5 rounded-md">
+            {isHi ? "आवश्यक निर्देश" : "Important Advisory"}
+          </span>
+          <span className="font-medium text-ink-soft">
+            {isHi
+              ? "साधना प्रारंभ करने से पूर्व अपने हीलर (मार्गदर्शक) से संपर्क व परामर्श अवश्य करें।"
+              : "Please contact your healer for personalized guidance and blessing before starting this sadhana."}
+          </span>
+        </div>
       </div>
 
       {/* ── Interactive Day Tracker (Replacing Holy Counter) ── */}
