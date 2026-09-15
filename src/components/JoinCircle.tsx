@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import { useLanguage } from "@/context/LanguageContext";
 import {
   ArrowUpRight,
   Copy,
@@ -201,6 +202,7 @@ function StaggeredCard({
 }
 
 export default function JoinCircle() {
+  const { language } = useLanguage();
   const containerRef = useRef<HTMLDivElement>(null);
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
@@ -223,25 +225,24 @@ export default function JoinCircle() {
       <div className="max-w-[1060px] mx-auto px-6 sm:px-8 relative z-10">
         {/* Section Header */}
         <div className="text-center max-w-[680px] mx-auto mb-16">
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/80 border border-gold/30 text-gold text-[0.72rem] tracking-[0.16em] uppercase font-semibold mb-4 shadow-2xs backdrop-blur-sm"
-          >
-            <Sparkles size={12} className="text-gold" />
-            <span>Connect &amp; Sanctuary</span>
-          </motion.div>
-
           <motion.h2
             initial={{ opacity: 0, y: 14 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7, delay: 0.1 }}
-            className="font-serif text-[clamp(2.4rem,4.5vw,3.4rem)] leading-[1.12] text-ink mb-4 font-normal"
+            className="font-serif text-[clamp(2.6rem,5.5vw,4.2rem)] leading-[1.08] tracking-[-0.015em] text-ink mb-5 font-normal"
           >
-            Join the circle
+            {language === "hi" ? (
+              <>
+                सत्संग मंडल{" "}
+                <em className="text-gold italic font-normal">से जुड़ें</em>
+              </>
+            ) : (
+              <>
+                Join the{" "}
+                <em className="text-gold italic font-normal">circle</em>
+              </>
+            )}
           </motion.h2>
 
           {/* Hindi Devanagari Sacred Motto */}
@@ -250,15 +251,15 @@ export default function JoinCircle() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7, delay: 0.2 }}
-            className="inline-block p-[14px_24px] rounded-2xl bg-white/70 border border-ink/[0.06] backdrop-blur-sm shadow-2xs my-2"
+            className="inline-block p-[14px_28px] rounded-2xl bg-white/75 border border-ink/[0.07] backdrop-blur-md shadow-xs my-2"
           >
-            <p className="font-serif text-[1.05rem] md:text-[1.18rem] text-ink/90 italic tracking-wide">
+            <p className="font-serif text-[1.1rem] md:text-[1.25rem] text-ink leading-relaxed italic tracking-wide">
               &ldquo;अपने भीतर की यात्रा आज ही शुरू करें।&rdquo;
             </p>
-            <div className="mt-1 flex items-center justify-center gap-2 text-[0.74rem] text-ink-soft uppercase tracking-wider font-medium">
+            <div className="mt-1.5 flex items-center justify-center gap-2.5 text-[0.75rem] text-ink-soft tracking-wider font-medium">
               <span>Guided by Vishal Gautam</span>
-              <span>·</span>
-              <span className="text-gold">Sitar by Karim Bhai</span>
+              <span className="opacity-40">·</span>
+              <span className="text-gold font-semibold">Sitar by Karim Bhai</span>
             </div>
           </motion.div>
         </div>

@@ -440,11 +440,6 @@ export default function CalendarView({ initialEvents = [] }: { initialEvents?: a
                     </div>
                     <div className="text-xs sm:text-sm font-semibold text-ink flex items-center gap-2 flex-wrap">
                       <span>{WEEKLY_DEITIES[weekDays[openDay].getDay()].team}</span>
-                      {WEEKLY_DEITIES[weekDays[openDay].getDay()].leader && (
-                        <span className="text-[#B8934A]">
-                          | {WEEKLY_DEITIES[weekDays[openDay].getDay()].leader}
-                        </span>
-                      )}
                     </div>
                   </div>
                 )}
@@ -471,7 +466,7 @@ export default function CalendarView({ initialEvents = [] }: { initialEvents?: a
               onClick={(e) => e.stopPropagation()}
               className="bg-[#FCFBF8] text-ink rounded-[28px] border border-amber-300 shadow-2xl max-w-6xl w-full max-h-[92vh] flex flex-col overflow-hidden relative"
             >
-              {/* Top Banner: Hindu Lunar Calendar Title + Main Deity (Clean & Minimal) */}
+              {/* Top Banner: Hindu Lunar Calendar Title + Controls + Main Deity */}
               <div
                 className="p-4 sm:p-5 md:p-6 relative overflow-hidden border-b border-amber-300/40"
                 style={{
@@ -487,71 +482,70 @@ export default function CalendarView({ initialEvents = [] }: { initialEvents?: a
                   <LucideX size={16} />
                 </button>
 
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pr-8 sm:pr-0">
-                  <div>
-                    {/* Main Deity of the Month at the top */}
-                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/90 border border-amber-400/50 text-amber-900 font-serif text-xs sm:text-sm font-semibold shadow-xs mb-2">
+                <div className="flex flex-col gap-3 pr-8 sm:pr-0">
+                  {/* Top Left Row: Year Selector (< 2026 >), Jump to Today, Main Deity */}
+                  <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+                    {/* Year Navigation Pill (< 2026 >) */}
+                    <div className="flex items-center bg-white border border-amber-400/80 rounded-full px-1 py-0.5 sm:px-1.5 sm:py-0.5 shadow-xs">
+                      <button
+                        onClick={prevYear}
+                        className="p-1 sm:p-1.5 hover:bg-amber-50 rounded-full transition-colors text-amber-900 cursor-pointer"
+                        title="Previous Year"
+                        aria-label="Previous Year"
+                      >
+                        <LucideChevronLeft size={16} />
+                      </button>
+                      <input
+                        type="number"
+                        value={currentYear}
+                        onChange={(e) => {
+                          const val = parseInt(e.target.value, 10);
+                          if (!isNaN(val) && val >= 1900 && val <= 2100) {
+                            setYear(val);
+                          }
+                        }}
+                        className="w-14 sm:w-16 text-center font-serif text-base sm:text-lg font-bold text-[#B8934A] bg-transparent focus:outline-none focus:ring-1 focus:ring-amber-400 rounded cursor-pointer"
+                        title="Click or type to edit year"
+                      />
+                      <button
+                        onClick={nextYear}
+                        className="p-1 sm:p-1.5 hover:bg-amber-50 rounded-full transition-colors text-amber-900 cursor-pointer"
+                        title="Next Year"
+                        aria-label="Next Year"
+                      >
+                        <LucideChevronRight size={16} />
+                      </button>
+                    </div>
+
+                    {/* Jump to Today Button Pill */}
+                    <button
+                      onClick={goToToday}
+                      className="px-3.5 sm:px-4 py-1.5 sm:py-2 bg-[#FEF3D6] hover:bg-[#FDE7AD] border border-amber-400/70 text-[#734410] rounded-full text-[0.68rem] sm:text-xs font-bold uppercase tracking-wider transition-colors shadow-xs cursor-pointer"
+                    >
+                      JUMP TO TODAY
+                    </button>
+
+                    {/* Main Deity of the Month Pill */}
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/90 border border-amber-400/50 text-amber-900 font-serif text-xs sm:text-sm font-semibold shadow-xs">
                       <span className="text-[0.68rem] sm:text-xs uppercase tracking-wider text-[#B8934A] font-sans font-bold">
-                        Main Deity of the Month:
+                        MAIN DEITY OF THE MONTH:
                       </span>
-                      <span>{hinduMonthTheme.primaryDeity}</span>
-                    </div>
-
-                    {/* Month Title & Devanagari */}
-                    <div className="flex items-baseline gap-2 sm:gap-3 flex-wrap">
-                      <h2 className="font-serif text-[1.8rem] sm:text-[2.2rem] md:text-[2.6rem] font-bold text-ink tracking-tight leading-none">
-                        {hinduMonthTheme.hinduName}
-                      </h2>
-                      <span className="font-serif text-lg sm:text-[1.3rem] md:text-[1.6rem] text-amber-800/80 font-normal">
-                        ({hinduMonthTheme.devanagari})
-                      </span>
-                      <span className="text-[0.72rem] sm:text-xs md:text-sm font-sans px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-white/80 border border-amber-300/60 text-ink font-medium shadow-xs">
-                        {currentDate.toLocaleDateString('en-IN', { month: 'long' })} {currentYear} · {hinduMonthTheme.gregorianSpan}
-                      </span>
+                      <span className="font-bold text-[#643D0C]">{hinduMonthTheme.primaryDeity}</span>
                     </div>
                   </div>
-                </div>
-              </div>
 
-              {/* ── Control Bar: Year Navigation & Jump to Today ── */}
-              <div className="bg-[#F6F2EA] px-3 sm:px-4 md:px-6 py-2.5 sm:py-3 border-b border-ink/8 flex items-center justify-between gap-3 flex-wrap">
-                <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-                  {/* Editable Year Picker (< [Year] >) */}
-                  <div className="flex items-center bg-white border border-amber-300/70 rounded-full p-0.5 sm:p-1 shadow-xs">
-                    <button
-                      onClick={prevYear}
-                      className="p-1 sm:p-1.5 hover:bg-amber-50 rounded-full transition-colors text-ink-soft hover:text-ink cursor-pointer"
-                      title="Previous Year"
-                    >
-                      <LucideChevronLeft size={15} />
-                    </button>
-                    <input
-                      type="number"
-                      value={currentYear}
-                      onChange={(e) => {
-                        const val = parseInt(e.target.value, 10);
-                        if (!isNaN(val) && val >= 1900 && val <= 2100) {
-                          setYear(val);
-                        }
-                      }}
-                      className="w-16 sm:w-18 text-center font-serif text-base sm:text-lg font-bold text-[#B8934A] bg-transparent focus:outline-none focus:ring-1 focus:ring-amber-400 rounded"
-                      title="Click or type to edit year"
-                    />
-                    <button
-                      onClick={nextYear}
-                      className="p-1 sm:p-1.5 hover:bg-amber-50 rounded-full transition-colors text-ink-soft hover:text-ink cursor-pointer"
-                      title="Next Year"
-                    >
-                      <LucideChevronRight size={15} />
-                    </button>
+                  {/* Month Title & Devanagari */}
+                  <div className="flex items-baseline gap-2 sm:gap-3 flex-wrap mt-1">
+                    <h2 className="font-serif text-[1.8rem] sm:text-[2.2rem] md:text-[2.6rem] font-bold text-ink tracking-tight leading-none">
+                      {hinduMonthTheme.hinduName}
+                    </h2>
+                    <span className="font-serif text-lg sm:text-[1.3rem] md:text-[1.6rem] text-amber-800/80 font-normal">
+                      ({hinduMonthTheme.devanagari})
+                    </span>
+                    <span className="text-[0.72rem] sm:text-xs md:text-sm font-sans px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-white/80 border border-amber-300/60 text-ink font-medium shadow-xs">
+                      {currentDate.toLocaleDateString('en-IN', { month: 'long' })} {currentYear} · {hinduMonthTheme.gregorianSpan}
+                    </span>
                   </div>
-
-                  <button
-                    onClick={goToToday}
-                    className="px-3 sm:px-4 py-1.5 bg-amber-100 hover:bg-amber-200/80 border border-amber-300/70 text-amber-900 rounded-full text-[0.68rem] sm:text-xs font-semibold uppercase tracking-wider transition-colors shadow-xs cursor-pointer"
-                  >
-                    Jump to Today
-                  </button>
                 </div>
               </div>
 
@@ -909,22 +903,10 @@ export default function CalendarView({ initialEvents = [] }: { initialEvents?: a
                     
                     <div className="text-xs text-ink-soft flex items-center gap-2">
                       <span>{WEEKLY_DEITIES[selectedDateDetail.getDay()].team}</span>
-                      {WEEKLY_DEITIES[selectedDateDetail.getDay()].leader && (
-                        <span className="font-medium text-ink">| {WEEKLY_DEITIES[selectedDateDetail.getDay()].leader}</span>
-                      )}
                     </div>
                   </div>
                 </div>
               )}
-
-              <div className="mt-5 sm:mt-6 flex justify-end">
-                <button
-                  onClick={() => setSelectedDateDetail(null)}
-                  className="w-full sm:w-auto px-6 py-2 rounded-full bg-ink hover:bg-[#B8934A] text-white font-semibold text-xs tracking-wider uppercase transition-colors cursor-pointer text-center"
-                >
-                  Close
-                </button>
-              </div>
             </motion.div>
           </motion.div>
         )}

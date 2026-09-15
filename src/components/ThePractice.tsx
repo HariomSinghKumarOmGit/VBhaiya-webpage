@@ -293,15 +293,8 @@ export default function ThePractice() {
             </>
           )}
         </h2>
-        <p
-          className="mt-4 max-w-[480px] mx-auto text-[0.95rem] md:text-[1rem] leading-[1.65]"
-          style={{ color: "rgba(246,243,236,0.58)" }}
-        >
-          {language === "hi"
-            ? "सत्र शांत, सहज और किसी दिखावे के बिना मौन और आंतरिक उपस्थिति पर आधारित हैं।"
-            : "Sessions are quiet, unhurried, and built around presence rather than performance."}
-        </p>
       </div>
+
 
       {/* ── HORIZONTAL INFINITE LOOPING MARQUEE (SINGLE LINE RIGHT TO LEFT) ── */}
       <div className="relative w-full overflow-hidden group py-2">
@@ -323,14 +316,7 @@ export default function ThePractice() {
         </div>
       </div>
 
-      {/* Subtitle guidance hint */}
-      <div className="relative z-10 text-center mt-8">
-        <span className="text-[0.7rem] uppercase tracking-[0.15em] text-white/30">
-          {language === "hi"
-            ? "रोकने के लिए स्पर्श करें · विस्तार से जानने के लिए किसी भी कार्ड पर टैप करें"
-            : "Hover to pause · Tap any card to explore practice"}
-        </span>
-      </div>
+
 
       <style>{`
         @keyframes innerlightMarquee {

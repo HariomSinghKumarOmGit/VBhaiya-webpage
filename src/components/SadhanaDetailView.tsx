@@ -131,46 +131,7 @@ export default function SadhanaDetailView({ sadhana }: { sadhana: SadhanaItem })
         />
       </div>
 
-      {/* ── Guidelines & Benefits Grid ── */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-        {/* Guidelines */}
-        <div className="bg-white/80 border border-ink/6 rounded-[28px] p-6 sm:p-8">
-          <div className="inline-flex items-center gap-2 text-xs font-bold text-ink uppercase tracking-wider mb-3">
-            <LucideShieldCheck className="w-4 h-4 text-gold" />
-            <span>{isHi ? "साधना नियम व मर्यादा" : "Sadhana Guidelines"}</span>
-          </div>
-          <h3 className="font-serif text-xl text-ink mb-4">
-            {isHi ? "अनुष्ठान मर्यादा" : "Sacred Disciplines"}
-          </h3>
-          <ul className="space-y-2.5 text-xs sm:text-sm text-ink-soft">
-            {(isHi ? sadhana.guidelines.hi : sadhana.guidelines.en).map((rule, idx) => (
-              <li key={idx} className="flex items-start gap-2.5">
-                <LucideCheckCircle2 className="w-4 h-4 text-gold shrink-0 mt-0.5" />
-                <span>{rule}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
 
-        {/* Benefits */}
-        <div className="bg-white/80 border border-ink/6 rounded-[28px] p-6 sm:p-8">
-          <div className="inline-flex items-center gap-2 text-xs font-bold text-gold uppercase tracking-wider mb-3">
-            <LucideSparkles className="w-4 h-4" />
-            <span>{isHi ? "साधना के दिव्य फल" : "Spiritual Fruits"}</span>
-          </div>
-          <h3 className="font-serif text-xl text-ink mb-4">
-            {isHi ? "प्राप्त होने वाले अनुभव" : "Awakening & Blessings"}
-          </h3>
-          <ul className="space-y-2.5 text-xs sm:text-sm text-ink-soft">
-            {(isHi ? sadhana.benefits.hi : sadhana.benefits.en).map((benefit, idx) => (
-              <li key={idx} className="flex items-start gap-2.5">
-                <LucideCheckCircle2 className="w-4 h-4 text-gold shrink-0 mt-0.5" />
-                <span>{benefit}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
 
       {/* ── Bottom Call To Action ── */}
       <div className="text-center bg-ivory-2/70 border border-ink/6 rounded-[28px] p-8 sm:p-12">

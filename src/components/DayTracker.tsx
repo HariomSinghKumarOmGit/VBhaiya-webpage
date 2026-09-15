@@ -188,18 +188,6 @@ export default function DayTracker({
 
       {/* ── Top Header ── */}
       <div className="relative z-10">
-        <div className="flex items-center justify-between gap-3 mb-4 flex-wrap">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-gold/15 text-gold text-xs font-bold uppercase tracking-wider border border-gold/25">
-            <LucideCalendarCheck2 className="w-3.5 h-3.5" />
-            <span>{isHi ? "दिव्य साधना दिवस ट्रैकर" : "Sacred Sadhana Day Tracker"}</span>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-ink-soft bg-white/80 px-3 py-1 rounded-full border border-ink/5">
-              {isHi ? `संकल्प लक्ष्य: ${totalDays} दिन` : `Sankalp Goal: ${totalDays} Days`}
-            </span>
-          </div>
-        </div>
 
         <h3 className="font-serif text-2xl sm:text-3xl md:text-4xl text-ink font-semibold mb-2">
           {isHi ? sadhanaTitleHi : sadhanaTitle}
@@ -469,27 +457,7 @@ export default function DayTracker({
           </div>
         </div>
 
-        {/* ── Bottom Legend & Hint ── */}
-        <div className="flex items-center justify-between text-[0.72rem] text-ink-soft/75 pt-3 border-t border-ink/6 flex-wrap gap-2">
-          <div className="flex items-center gap-3">
-            <span className="flex items-center gap-1.5">
-              <span className="w-3 h-3 rounded bg-white border border-ink/15 inline-block" />
-              {isHi ? "आगामी दिवस" : "Upcoming Day"}
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="w-3 h-3 rounded bg-[#EBE0C5] border border-gold inline-flex items-center justify-center text-[0.55rem] text-[#A8331F] font-bold">
-                ✕
-              </span>
-              {isHi ? "काटा गया / पूर्ण दिवस" : "Cut / Completed"}
-            </span>
-          </div>
 
-          <span className="italic">
-            {isHi
-              ? "आपकी प्रगति आपके ब्राउज़र में स्वतः सुरक्षित रहती है।"
-              : "Progress automatically persists in your browser."}
-          </span>
-        </div>
       </div>
 
       {/* ── Sankalp Completion Celebratory Modal ── */}

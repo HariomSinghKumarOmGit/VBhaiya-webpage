@@ -222,8 +222,8 @@ export default function SadhanaListClient() {
       <div className="mb-16">
         <DayTracker
           sadhanaId="universal-day-tracker"
-          sadhanaTitle="Sacred Sadhana Day Tracker"
-          sadhanaTitleHi="साधना दिवस ट्रैकर (संकल्प गणना)"
+          sadhanaTitle="Sadhana Day Tracker"
+          sadhanaTitleHi="साधना दिवस ट्रैकर"
           defaultDays={41}
           accentColor="#B8934A"
         />
@@ -290,20 +290,7 @@ export default function SadhanaListClient() {
 
 
 
-              {/* Guidelines */}
-              <div className="mb-6">
-                <h4 className="font-serif text-base text-ink mb-2 font-semibold">
-                  {isHi ? "साधना नियम व मर्यादा" : "Sadhana Guidelines"}
-                </h4>
-                <ul className="space-y-1.5 text-xs text-ink-soft">
-                  {(isHi ? activeModalSadhana.guidelines.hi : activeModalSadhana.guidelines.en).map((rule, idx) => (
-                    <li key={idx} className="flex items-start gap-2">
-                      <LucideCheckCircle2 className="w-3.5 h-3.5 text-gold shrink-0 mt-0.5" />
-                      <span>{rule}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+
 
               {/* Modal Actions */}
               <div className="flex items-center justify-between gap-3 pt-4 border-t border-ink/8">
