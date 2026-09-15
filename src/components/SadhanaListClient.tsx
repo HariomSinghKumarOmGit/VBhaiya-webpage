@@ -184,48 +184,6 @@ export default function SadhanaListClient() {
                   {isHi ? sadhana.mantraMeaningHi : sadhana.mantraMeaning}
                 </div>
               </div>
-
-              {/* Healer Advisory Notice */}
-              <div className="flex items-center gap-2 text-[0.73rem] text-amber-900/90 bg-amber-500/10 border border-amber-500/20 px-3.5 py-2 rounded-xl mb-6">
-                <LucideSparkles className="w-3.5 h-3.5 text-gold shrink-0" />
-                <span className="font-medium">
-                  {isHi
-                    ? "साधना प्रारंभ करने से पूर्व हीलर से संपर्क अवश्य करें"
-                    : "Contact healer before starting this sadhana"}
-                </span>
-              </div>
-            </div>
-
-            {/* Bottom Actions */}
-            <div className="pt-4 border-t border-ink/6 flex items-center justify-between gap-3 flex-wrap">
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setActiveModalSadhana(sadhana);
-                  }}
-                  className="px-4 py-2 rounded-full bg-ink/5 hover:bg-ink/10 text-ink text-xs font-semibold tracking-wide transition-colors cursor-pointer"
-                >
-                  {isHi ? "त्वरित दर्शन" : "Quick Preview"}
-                </button>
-                <span className="px-4 py-2 rounded-full bg-ink text-ivory group-hover:bg-gold text-xs font-semibold tracking-wide transition-colors flex items-center gap-1.5">
-                  <span>{isHi ? "संपूर्ण विधि" : "Full Guide"}</span>
-                  <LucideArrowRight className="w-3 h-3" />
-                </span>
-              </div>
-
-              {sadhana.meetLink && (
-                <a
-                  href={sadhana.meetLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={(e) => e.stopPropagation()}
-                  className="text-xs text-gold hover:text-ink font-semibold flex items-center gap-1 transition-colors"
-                >
-                  <span>{isHi ? "मीट लिंक" : "Live Sit"}</span>
-                  <LucideExternalLink className="w-3 h-3" />
-                </a>
-              )}
             </div>
           </motion.div>
         ))}
@@ -305,20 +263,7 @@ export default function SadhanaListClient() {
 
 
 
-              {/* Important Healer Notice in Modal */}
-              <div className="flex items-start sm:items-center gap-3 p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/20 mb-6 text-xs text-ink leading-relaxed">
-                <LucideSparkles className="w-4 h-4 text-gold shrink-0 mt-0.5 sm:mt-0" />
-                <p>
-                  <span className="font-bold text-amber-900 mr-1">
-                    {isHi ? "महत्वपूर्ण:" : "Important:"}
-                  </span>
-                  <span className="text-ink-soft">
-                    {isHi
-                      ? "इस साधना को प्रारंभ करने से पूर्व अपने हीलर (मार्गदर्शक) से संपर्क व परामर्श अवश्य करें।"
-                      : "Please contact your healer for personalized guidance before starting this sadhana."}
-                  </span>
-                </p>
-              </div>
+
 
               {/* Modal Actions */}
               <div className="flex items-center justify-between gap-3 pt-4 border-t border-ink/8">
