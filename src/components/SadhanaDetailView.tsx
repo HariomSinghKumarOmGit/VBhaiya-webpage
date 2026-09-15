@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { SadhanaItem } from "@/data/sadhanas";
 import { useLanguage } from "@/context/LanguageContext";
+import DayTracker from "@/components/DayTracker";
 import {
   LucideArrowLeft,
   LucideCalendar,
@@ -11,17 +11,12 @@ import {
   LucideCheckCircle2,
   LucideSparkles,
   LucideExternalLink,
-  LucideSun,
-  LucideVolume2,
   LucideFlame,
   LucideShieldCheck,
 } from "lucide-react";
 
 export default function SadhanaDetailView({ sadhana }: { sadhana: SadhanaItem }) {
   const { language } = useLanguage();
-  const [japaCount, setJapaCount] = useState<number>(0);
-  const [japaTarget, setJapaTarget] = useState<number>(108);
-
   const isHi = language === "hi";
 
   return (
@@ -97,7 +92,7 @@ export default function SadhanaDetailView({ sadhana }: { sadhana: SadhanaItem })
             <span>{isHi ? "मूल साधना मंत्र" : "Core Sadhana Mantra"}</span>
           </div>
           <span className="text-xs text-ink-soft bg-ivory-2 px-3 py-1 rounded-full">
-            {isHi ? "108 बार दैनिक जप" : "108 Daily Repetitions"}
+            {isHi ? "दैनिक मंत्र जप" : "Daily Sacred Repetition"}
           </span>
         </div>
 
@@ -120,107 +115,20 @@ export default function SadhanaDetailView({ sadhana }: { sadhana: SadhanaItem })
         <h2 className="font-serif text-2xl sm:text-3xl text-ink mb-4">
           {isHi ? "साधना का रहस्य व महत्व" : "Significance & Spiritual Depth"}
         </h2>
-        <p className="text-ink-soft text-base sm:text-lg leading-relaxed mb-8">
+        <p className="text-ink-soft text-base sm:text-lg leading-relaxed">
           {isHi ? sadhana.overviewHi : sadhana.overview}
         </p>
-
-        {/* Pillars Grid */}
-        <h3 className="font-serif text-xl text-ink mb-4 font-semibold">
-          {isHi ? "साधना के चार मुख्य स्तम्भ" : "Four Core Pillars of Practice"}
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {sadhana.pillars.map((pillar, idx) => (
-            <div key={idx} className="bg-ivory/60 rounded-2xl p-5 border border-ink/6">
-              <div className="font-serif text-lg text-ink font-semibold mb-1">
-                {isHi ? pillar.titleHi : pillar.title}
-              </div>
-              <p className="text-xs sm:text-sm text-ink-soft leading-relaxed">
-                {isHi ? pillar.descHi : pillar.desc}
-              </p>
-            </div>
-          ))}
-        </div>
       </div>
 
-      {/* ── Daily Practice Schedule ── */}
-      <div className="bg-white/80 border border-ink/6 rounded-[28px] sm:rounded-[32px] p-6 sm:p-8 mb-12">
-        <h2 className="font-serif text-2xl sm:text-3xl text-ink mb-2">
-          {isHi ? "दैनिक साधना समय-सारणी" : "Daily Practice Routine"}
-        </h2>
-        <p className="text-xs sm:text-sm text-ink-soft mb-6">
-          {isHi
-            ? `इस ${sadhana.durationDays} दिवसीय अनुष्ठान के दौरान इस दैनिक क्रम का पालन करें:`
-            : `Follow this serene daily schedule throughout your ${sadhana.durationDays}-day commitment:`}
-        </p>
-
-        <div className="space-y-3">
-          {sadhana.dailySchedule.map((item, idx) => (
-            <div
-              key={idx}
-              className="bg-ivory/40 hover:bg-ivory/80 transition-colors rounded-2xl p-4 sm:p-5 border border-ink/6 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
-            >
-              <div className="flex items-start gap-4">
-                <span className="font-mono text-xs sm:text-sm font-bold text-gold px-3 py-1 rounded-lg bg-gold/10 shrink-0">
-                  {item.time}
-                </span>
-                <div>
-                  <div className="font-serif text-base text-ink font-semibold">
-                    {isHi ? item.activityHi : item.activity}
-                  </div>
-                  <div className="text-xs sm:text-sm text-ink-soft mt-0.5">
-                    {isHi ? item.detailsHi : item.details}
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* ── Interactive Japa Counter ── */}
-      <div className="bg-[#FAF8F4] border border-gold/30 rounded-[28px] sm:rounded-[36px] p-6 sm:p-10 mb-12 text-center">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gold/15 text-gold text-xs font-semibold uppercase tracking-wider mb-3">
-          <LucideSun className="w-3.5 h-3.5" />
-          <span>{isHi ? "दैनिक मंत्र जप संगी" : "Daily Japa Practice"}</span>
-        </div>
-        <h3 className="font-serif text-2xl sm:text-3xl text-ink mb-2">
-          {isHi ? "108 मनके दिव्य जप माला" : "108 Bead Japa Tracker"}
-        </h3>
-        <p className="text-xs sm:text-sm text-ink-soft max-w-md mx-auto mb-6">
-          {isHi
-            ? "जप के समय मनकों की गिनती के लिए इस चक्र को स्पर्श करें।"
-            : "Tap the sacred counter below for each repetition of the sadhana mantra."}
-        </p>
-
-        <div className="flex flex-col items-center justify-center my-4">
-          <button
-            onClick={() => setJapaCount((prev) => (prev + 1) % (japaTarget + 1))}
-            className="w-32 h-32 sm:w-40 sm:h-40 rounded-full border-4 border-gold/40 hover:border-gold bg-white flex flex-col items-center justify-center transition-transform active:scale-95 shadow-lg cursor-pointer"
-          >
-            <span className="font-serif text-3xl sm:text-4xl text-ink font-bold">{japaCount}</span>
-            <span className="text-[0.68rem] tracking-widest text-gold uppercase font-bold mt-1">
-              / {japaTarget}
-            </span>
-          </button>
-          <div className="text-xs text-ink-soft mt-3 font-medium">
-            {isHi ? "जप के लिए टैप करें" : "Tap circle with each chant"}
-          </div>
-        </div>
-
-        <div className="flex items-center justify-center gap-3 mt-4">
-          <button
-            onClick={() => setJapaCount(0)}
-            className="px-4 py-1.5 rounded-full text-xs font-medium text-ink-soft hover:bg-ink/5 border border-ink/10 transition-colors cursor-pointer"
-          >
-            {isHi ? "रीसेट" : "Reset"}
-          </button>
-          <button
-            onClick={() => setJapaTarget(japaTarget === 108 ? 1008 : 108)}
-            className="px-4 py-1.5 rounded-full text-xs font-medium bg-gold/15 text-gold hover:bg-gold/25 transition-colors cursor-pointer"
-          >
-            {isHi ? `लक्ष्य: ${japaTarget}` : `Target: ${japaTarget}`}
-          </button>
-        </div>
+      {/* ── Interactive Day Tracker (Replacing Holy Counter) ── */}
+      <div className="mb-12">
+        <DayTracker
+          sadhanaId={sadhana.id}
+          sadhanaTitle={`${sadhana.title} · Day Tracker`}
+          sadhanaTitleHi={`${sadhana.titleHi} · दिवस ट्रैकर`}
+          defaultDays={sadhana.durationDays}
+          accentColor={sadhana.accentColor}
+        />
       </div>
 
       {/* ── Guidelines & Benefits Grid ── */}

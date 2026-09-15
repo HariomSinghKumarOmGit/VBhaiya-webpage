@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   nextFullMoon,
@@ -35,7 +36,9 @@ import {
 } from 'lucide-react';
 
 export default function CalendarView({ initialEvents = [] }: { initialEvents?: any[] }) {
+  const router = useRouter();
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [weekOffset, setWeekOffset] = useState<number>(0);
   const [openDay, setOpenDay] = useState<number | null>(null);
   const [isMonthModalOpen, setIsMonthModalOpen] = useState(false);
   const [selectedDateDetail, setSelectedDateDetail] = useState<Date | null>(null);
@@ -87,10 +90,30 @@ export default function CalendarView({ initialEvents = [] }: { initialEvents?: a
   const nextYear = () => setCurrentDate(new Date(currentDate.getFullYear() + 1, currentDate.getMonth(), 1));
   const setYear = (year: number) => setCurrentDate(new Date(year, currentDate.getMonth(), 1));
 
-  // Week navigation helpers
-  const prevWeek = () => setCurrentDate(addDays(currentDate, -7));
-  const nextWeek = () => setCurrentDate(addDays(currentDate, 7));
-  const goToToday = () => setCurrentDate(new Date());
+  // Week navigation helpers (prev week, today, next week with directional disabling)
+  const prevWeek = () => {
+    if (weekOffset > -1) {
+      const nextOffset = weekOffset - 1;
+      setWeekOffset(nextOffset);
+      setCurrentDate(addDays(today, nextOffset * 7));
+      setOpenDay(null);
+    }
+  };
+
+  const nextWeek = () => {
+    if (weekOffset < 1) {
+      const nextOffset = weekOffset + 1;
+      setWeekOffset(nextOffset);
+      setCurrentDate(addDays(today, nextOffset * 7));
+      setOpenDay(null);
+    }
+  };
+
+  const goToToday = () => {
+    setWeekOffset(0);
+    setCurrentDate(new Date());
+    setOpenDay(null);
+  };
 
   const dayShort = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   const monthName = currentDate.toLocaleDateString('en-IN', { month: 'long', year: 'numeric' });
@@ -101,28 +124,40 @@ export default function CalendarView({ initialEvents = [] }: { initialEvents?: a
     setIsMonthModalOpen(true);
   };
 
+  const closeBigMonthlyCalendar = () => {
+    setIsMonthModalOpen(false);
+    setCurrentDate(new Date());
+    setWeekOffset(0);
+    setOpenDay(null);
+  };
+
   return (
-    <div>
+    <div data-calendar-area="true">
       {/* ── Top info grid (3 Clean Tabs) ── */}
       <div
         className="grid grid-cols-1 md:grid-cols-3 gap-[1px] rounded-2xl sm:rounded-[24px] overflow-hidden mb-8 sm:mb-10 border border-ink/8 shadow-sm"
         style={{ background: "rgba(27,24,18,0.08)" }}
       >
-        {/* Tab 1: Ongoing */}
-        <div className="bg-white p-5 sm:p-[26px_24px] flex flex-col justify-between">
+        {/* Tab 1: Ongoing — Clickable to view 41-Day Sadhana */}
+        <div
+          onClick={() => router.push('/programs/41-day-sadhana')}
+          className="bg-white p-5 sm:p-[26px_24px] flex flex-col justify-between cursor-pointer group transition-all duration-200 hover:bg-amber-50/40 relative"
+          title="Click to view 41-Day Sadhana guide & details"
+        >
           <div>
             <div className="flex items-center justify-between gap-2 mb-1.5 sm:mb-2">
-              <span className="text-[0.7rem] sm:text-[0.72rem] tracking-[0.1em] text-gold uppercase font-bold">
+              <span className="text-[0.7rem] sm:text-[0.72rem] tracking-[0.1em] text-gold uppercase font-bold group-hover:text-amber-800 transition-colors">
                 Ongoing · 41-Day Sadhana
               </span>
               <Link
                 href="/programs"
+                onClick={(e) => e.stopPropagation()}
                 className="text-[0.68rem] text-gold hover:text-ink font-medium tracking-wide transition-colors"
               >
                 All Sadhanas →
               </Link>
             </div>
-            <div className="font-serif text-[1.15rem] sm:text-[1.28rem] leading-[1.35] text-ink">
+            <div className="font-serif text-[1.15rem] sm:text-[1.28rem] leading-[1.35] text-ink group-hover:text-amber-950 transition-colors">
               {fmt(ongoingStart, { day: 'numeric', month: 'short' })} –{' '}
               {fmt(addDays(ongoingStart, 40), { day: 'numeric', month: 'short' })}
             </div>
@@ -136,6 +171,7 @@ export default function CalendarView({ initialEvents = [] }: { initialEvents?: a
                 href="https://meet.google.com/odv-evnd-mfy"
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
                 className="inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#B8934A] hover:bg-[#99732B] text-white text-xs font-semibold tracking-wide transition-all shadow-xs w-fit cursor-pointer"
               >
                 <span>Join Google Meet</span>
@@ -145,6 +181,7 @@ export default function CalendarView({ initialEvents = [] }: { initialEvents?: a
               </a>
               <Link
                 href="/programs/41-day-sadhana"
+                onClick={(e) => e.stopPropagation()}
                 className="inline-flex items-center justify-center px-3 py-1.5 rounded-full bg-ink/5 hover:bg-ink/10 text-ink text-xs font-medium tracking-wide transition-all"
               >
                 Details
@@ -196,7 +233,11 @@ export default function CalendarView({ initialEvents = [] }: { initialEvents?: a
 
           <div className="grid grid-cols-3 gap-1 sm:gap-1.5 mt-1 text-center">
             {/* Amavasya */}
-            <div className="p-1.5 sm:p-2 rounded-xl bg-[#1C1814] text-white flex flex-col justify-between shadow-2xs">
+            <div
+              data-calendar-tithi="amavasya"
+              data-calendar-label="Amavasya"
+              className="p-1.5 sm:p-2 rounded-xl bg-[#1C1814] text-white flex flex-col justify-between shadow-2xs"
+            >
               <span className="text-[0.55rem] sm:text-[0.62rem] uppercase opacity-70">● Amavasya</span>
               <span className="font-serif text-[0.82rem] sm:text-[0.92rem] text-amber-300 font-bold mt-0.5">
                 {monthSacredDates.amavasya.length > 0 ? `${monthSacredDates.amavasya[0]} ${currentDate.toLocaleDateString('en-IN', { month: 'short' })}` : 'Tithi'}
@@ -204,7 +245,11 @@ export default function CalendarView({ initialEvents = [] }: { initialEvents?: a
             </div>
 
             {/* Purnima */}
-            <div className="p-1.5 sm:p-2 rounded-xl bg-[#FDF3D6] text-ink border border-amber-300 flex flex-col justify-between shadow-2xs">
+            <div
+              data-calendar-tithi="purnima"
+              data-calendar-label="Purnima"
+              className="p-1.5 sm:p-2 rounded-xl bg-[#FDF3D6] text-ink border border-amber-300 flex flex-col justify-between shadow-2xs"
+            >
               <span className="text-[0.55rem] sm:text-[0.62rem] uppercase font-bold text-amber-900">○ Purnima</span>
               <span className="font-serif text-[0.82rem] sm:text-[0.92rem] text-ink font-bold mt-0.5">
                 {monthSacredDates.purnima.length > 0 ? `${monthSacredDates.purnima[0]} ${currentDate.toLocaleDateString('en-IN', { month: 'short' })}` : 'Tithi'}
@@ -212,7 +257,11 @@ export default function CalendarView({ initialEvents = [] }: { initialEvents?: a
             </div>
 
             {/* Kaal Ashtami */}
-            <div className="p-1.5 sm:p-2 rounded-xl bg-[#F5EDFD] text-[#3B195C] border border-purple-200 flex flex-col justify-between shadow-2xs">
+            <div
+              data-calendar-tithi="kaal_ashtami"
+              data-calendar-label="Kaal Ashtami"
+              className="p-1.5 sm:p-2 rounded-xl bg-[#F5EDFD] text-[#3B195C] border border-purple-200 flex flex-col justify-between shadow-2xs"
+            >
               <span className="text-[0.55rem] sm:text-[0.62rem] uppercase font-bold text-purple-800">⚡ Ashtami</span>
               <span className="font-serif text-[0.82rem] sm:text-[0.92rem] text-purple-950 font-bold mt-0.5">
                 {monthSacredDates.kaalAshtami.length > 0 ? `${monthSacredDates.kaalAshtami[0]} ${currentDate.toLocaleDateString('en-IN', { month: 'short' })}` : '8th'}
@@ -231,22 +280,38 @@ export default function CalendarView({ initialEvents = [] }: { initialEvents?: a
           <div className="flex items-center gap-1 bg-white border border-ink/10 rounded-full p-0.5 shadow-xs">
             <button
               onClick={prevWeek}
-              className="p-1.5 hover:bg-ink/5 rounded-full transition-colors text-ink-soft hover:text-ink cursor-pointer"
-              title="Previous Week"
+              disabled={weekOffset <= -1}
+              className={`p-1.5 rounded-full transition-all ${
+                weekOffset <= -1
+                  ? "opacity-25 text-ink/30 cursor-not-allowed pointer-events-none"
+                  : "hover:bg-ink/5 text-ink-soft hover:text-ink cursor-pointer"
+              }`}
+              title={weekOffset <= -1 ? "Reached previous week limit" : "Previous Week"}
+              aria-label="Previous Week"
             >
               <LucideChevronLeft size={15} />
             </button>
             <button
               onClick={goToToday}
-              className="px-2.5 py-0.5 text-[0.68rem] sm:text-[0.7rem] font-semibold text-ink-soft hover:text-ink transition-colors uppercase tracking-wider cursor-pointer"
-              title="Jump to Today"
+              className={`px-2.5 py-0.5 text-[0.68rem] sm:text-[0.7rem] font-semibold transition-colors uppercase tracking-wider cursor-pointer ${
+                weekOffset === 0
+                  ? "text-[#B8934A] font-bold"
+                  : "text-ink-soft hover:text-ink font-semibold"
+              }`}
+              title="Click to Jump to Today"
             >
-              Today
+              {weekOffset === -1 ? "Prev Week" : weekOffset === 1 ? "Next Week" : "Today"}
             </button>
             <button
               onClick={nextWeek}
-              className="p-1.5 hover:bg-ink/5 rounded-full transition-colors text-ink-soft hover:text-ink cursor-pointer"
-              title="Next Week"
+              disabled={weekOffset >= 1}
+              className={`p-1.5 rounded-full transition-all ${
+                weekOffset >= 1
+                  ? "opacity-25 text-ink/30 cursor-not-allowed pointer-events-none"
+                  : "hover:bg-ink/5 text-ink-soft hover:text-ink cursor-pointer"
+              }`}
+              title={weekOffset >= 1 ? "Reached next week limit" : "Next Week"}
+              aria-label="Next Week"
             >
               <LucideChevronRight size={15} />
             </button>
@@ -285,6 +350,9 @@ export default function CalendarView({ initialEvents = [] }: { initialEvents?: a
           return (
             <div key={i} className="contents md:block">
               <div
+                data-calendar-cell="true"
+                data-calendar-tithi={sacredTithi?.type || ''}
+                data-calendar-label={sacredTithi ? (sacredTithi.shortTitle || sacredTithi.title) : isToday ? 'Today' : themeTag || 'View Day'}
                 className={`flex flex-col justify-between rounded-xl sm:rounded-[18px] p-1.5 sm:p-2.5 md:p-[16px_12px] text-center cursor-pointer transition-all duration-200 border shadow-2xs min-h-[70px] sm:min-h-[85px] md:min-h-0 ${
                   isToday
                     ? 'text-white border-[#B8934A] bg-[#B8934A]'
@@ -393,7 +461,7 @@ export default function CalendarView({ initialEvents = [] }: { initialEvents?: a
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={() => setIsMonthModalOpen(false)}
+            onClick={closeBigMonthlyCalendar}
             className="fixed inset-0 z-[500] flex items-center justify-center p-2 sm:p-4 md:p-6 bg-black/60 backdrop-blur-md overflow-y-auto"
           >
             <motion.div
@@ -403,69 +471,44 @@ export default function CalendarView({ initialEvents = [] }: { initialEvents?: a
               onClick={(e) => e.stopPropagation()}
               className="bg-[#FCFBF8] text-ink rounded-[28px] border border-amber-300 shadow-2xl max-w-6xl w-full max-h-[92vh] flex flex-col overflow-hidden relative"
             >
-              {/* Top Banner: Hindu Lunar Calendar Title + Blessing (Light Theme) */}
+              {/* Top Banner: Hindu Lunar Calendar Title + Main Deity (Clean & Minimal) */}
               <div
-                className="p-4 sm:p-5 md:p-7 relative overflow-hidden border-b border-amber-300/40"
+                className="p-4 sm:p-5 md:p-6 relative overflow-hidden border-b border-amber-300/40"
                 style={{
                   background: hinduMonthTheme.bgGradient,
                 }}
               >
                 {/* Close Button at top right */}
                 <button
-                  onClick={() => setIsMonthModalOpen(false)}
+                  onClick={closeBigMonthlyCalendar}
                   className="absolute top-3 right-3 sm:top-4 sm:right-4 z-20 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/80 hover:bg-white border border-amber-300/50 shadow-sm flex items-center justify-center text-ink-soft hover:text-ink transition-all cursor-pointer"
                   title="Close Calendar"
                 >
                   <LucideX size={16} />
                 </button>
 
-                {/* Poster Inspired Header Subtitle */}
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4 pr-7 md:pr-0">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pr-8 sm:pr-0">
                   <div>
-                    <div className="flex items-center gap-1.5 sm:gap-2 text-[0.62rem] sm:text-[0.72rem] md:text-[0.78rem] uppercase tracking-[0.12em] sm:tracking-[0.16em] font-bold text-amber-800">
-                      <span>ॐ सर्वं भवन्तु सुखिनः</span>
-                      <span>·</span>
-                      <span className="hidden sm:inline">TWELVE MONTHS ETERNAL WISDOM</span>
-                      <span className="sm:hidden">12 MONTHS</span>
-                      <span>·</span>
-                      <span>ॐ सर्वे सन्तु निरामयाः</span>
+                    {/* Main Deity of the Month at the top */}
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/90 border border-amber-400/50 text-amber-900 font-serif text-xs sm:text-sm font-semibold shadow-xs mb-2">
+                      <span className="text-[0.68rem] sm:text-xs uppercase tracking-wider text-[#B8934A] font-sans font-bold">
+                        Main Deity of the Month:
+                      </span>
+                      <span>{hinduMonthTheme.primaryDeity}</span>
                     </div>
 
                     {/* Month Title & Devanagari */}
-                    <div className="flex items-baseline gap-2 sm:gap-3 mt-1 sm:mt-1.5 flex-wrap">
-                      <h2 className="font-serif text-[1.8rem] sm:text-[2.2rem] md:text-[2.8rem] font-bold text-ink tracking-tight leading-none">
+                    <div className="flex items-baseline gap-2 sm:gap-3 flex-wrap">
+                      <h2 className="font-serif text-[1.8rem] sm:text-[2.2rem] md:text-[2.6rem] font-bold text-ink tracking-tight leading-none">
                         {hinduMonthTheme.hinduName}
                       </h2>
-                      <span className="font-serif text-lg sm:text-[1.4rem] md:text-[1.7rem] text-amber-800/80 font-normal">
+                      <span className="font-serif text-lg sm:text-[1.3rem] md:text-[1.6rem] text-amber-800/80 font-normal">
                         ({hinduMonthTheme.devanagari})
                       </span>
-                      <span className="text-[0.7rem] sm:text-xs md:text-sm font-sans px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-white/80 border border-amber-300/60 text-ink font-medium shadow-xs">
+                      <span className="text-[0.72rem] sm:text-xs md:text-sm font-sans px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-white/80 border border-amber-300/60 text-ink font-medium shadow-xs">
                         {currentDate.toLocaleDateString('en-IN', { month: 'long' })} {currentYear} · {hinduMonthTheme.gregorianSpan}
                       </span>
                     </div>
-
-                    {/* Presiding Deity & Month Theme */}
-                    <div className="flex items-center gap-2 sm:gap-3 mt-2 sm:mt-2.5 flex-wrap">
-                      <span className="px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-lg bg-white/90 text-amber-900 border border-amber-400/50 font-serif text-xs sm:text-sm md:text-base font-semibold shadow-xs">
-                        Deity: {hinduMonthTheme.primaryDeity}
-                      </span>
-                      <span className="px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-lg bg-black/5 text-ink-soft font-medium text-[0.7rem] sm:text-xs md:text-sm border border-black/5">
-                        Theme: {hinduMonthTheme.themeTitle}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Mantra Box */}
-                  <div className="max-w-md bg-white/85 border border-amber-300/60 rounded-xl sm:rounded-[18px] p-2.5 sm:p-3.5 shadow-sm backdrop-blur-sm">
-                    <div className="text-[0.62rem] sm:text-[0.68rem] tracking-wider uppercase text-amber-800 font-bold mb-0.5">
-                      Divine Mantra & Blessing
-                    </div>
-                    <p className="font-serif text-[0.85rem] sm:text-[0.95rem] text-[#2B1D0E] italic leading-snug font-medium">
-                      "{hinduMonthTheme.mantra}"
-                    </p>
-                    <p className="text-[0.68rem] sm:text-[0.74rem] text-ink-soft mt-0.5 sm:mt-1">
-                      {hinduMonthTheme.themeDescription}
-                    </p>
                   </div>
                 </div>
               </div>
@@ -604,6 +647,9 @@ export default function CalendarView({ initialEvents = [] }: { initialEvents?: a
                             <div
                               key={dayNum}
                               onClick={() => setSelectedDateDetail(date)}
+                              data-calendar-cell="true"
+                              data-calendar-tithi={sacredTithi?.type || (dayFestivals.length > 0 ? "festival" : "")}
+                              data-calendar-label={sacredTithi ? (sacredTithi.shortTitle || sacredTithi.title) : dayFestivals.length > 0 ? dayFestivals[0].name : isToday ? 'Today' : `Day ${dayNum}`}
                               className={`p-1 sm:p-1.5 md:p-2.5 border rounded-lg sm:rounded-[16px] transition-all duration-200 cursor-pointer min-h-[46px] sm:min-h-[70px] md:min-h-[100px] flex flex-col justify-between relative group shadow-2xs ${cellBg} ${cellBorder}`}
                             >
                               {/* Top Row: Date Number & Badges */}
@@ -703,6 +749,9 @@ export default function CalendarView({ initialEvents = [] }: { initialEvents?: a
                               <div
                                 key={`${day}-${fIdx}`}
                                 onClick={() => setSelectedDateDetail(new Date(currentYear, currentMonthIdx, Number(day)))}
+                                data-calendar-cell="true"
+                                data-calendar-tithi="festival"
+                                data-calendar-label={fest.name}
                                 className="p-3 sm:p-4 rounded-xl sm:rounded-[16px] bg-[#FAF8F3] border border-ink/8 hover:border-[#B8934A]/50 transition-all flex items-start gap-3 sm:gap-3.5 cursor-pointer group shadow-2xs"
                               >
                                 <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-[#B8934A] to-[#99732B] text-white font-serif flex flex-col items-center justify-center font-bold flex-shrink-0 shadow-xs">

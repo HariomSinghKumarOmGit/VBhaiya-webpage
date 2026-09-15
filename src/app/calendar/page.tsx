@@ -17,7 +17,7 @@ export default async function CalendarPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#F6F3EC] text-ink pt-24 sm:pt-[120px] pb-20 sm:pb-[140px] relative">
+    <main data-calendar-area="true" className="min-h-screen bg-[#F6F3EC] text-ink pt-24 sm:pt-[120px] pb-20 sm:pb-[140px] relative">
       <LuxuryCursor />
       <Navigation />
 

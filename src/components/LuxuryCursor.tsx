@@ -19,6 +19,7 @@ export default function LuxuryCursor() {
   const [isPointer, setIsPointer] = useState(false);
   const [isDarkBg, setIsDarkBg] = useState(false);
   const [isClicking, setIsClicking] = useState(false);
+  const [inCalendar, setInCalendar] = useState(false);
   const [particles, setParticles] = useState<Particle[]>([]);
   const lastParticleTime = useRef(0);
   const particleId = useRef(0);
@@ -28,12 +29,12 @@ export default function LuxuryCursor() {
   const mouseY = useMotionValue(-200);
 
   // Smooth lagging springs for the outer aura ring
-  const auraSpringX = useSpring(mouseX, { stiffness: 180, damping: 24, mass: 0.6 });
-  const auraSpringY = useSpring(mouseY, { stiffness: 180, damping: 24, mass: 0.6 });
+  const auraSpringX = useSpring(mouseX, { stiffness: 220, damping: 24, mass: 0.5 });
+  const auraSpringY = useSpring(mouseY, { stiffness: 220, damping: 24, mass: 0.5 });
 
-  // Faster spring for the central pin dot
-  const dotSpringX = useSpring(mouseX, { stiffness: 600, damping: 36, mass: 0.1 });
-  const dotSpringY = useSpring(mouseY, { stiffness: 600, damping: 36, mass: 0.1 });
+  // Fast spring for the central pin dot
+  const dotSpringX = useSpring(mouseX, { stiffness: 700, damping: 35, mass: 0.08 });
+  const dotSpringY = useSpring(mouseY, { stiffness: 700, damping: 35, mass: 0.08 });
 
   useEffect(() => {
     setMounted(true);
@@ -45,7 +46,6 @@ export default function LuxuryCursor() {
       const heroEl = document.querySelector("section");
       if (heroEl) {
         const rect = heroEl.getBoundingClientRect();
-        // Check if user is still inside hero section viewport
         if (rect.bottom > 80) {
           setInHero(true);
         } else {
@@ -64,31 +64,47 @@ export default function LuxuryCursor() {
 
       checkHeroSection();
 
-      // Check if cursor is over interactive elements (links, buttons, inputs)
       const target = e.target as HTMLElement | null;
       if (target) {
-        const interactive = target.closest("a, button, input, textarea, select, [role='button'], .cursor-pointer");
+        // Detect if hovering in Calendar area
+        const calendarSection = target.closest(
+          "#calendar, [data-calendar-area='true'], .calendar-area"
+        );
+        const isCalendarPath =
+          typeof window !== "undefined" &&
+          (window.location.pathname === "/calendar" ||
+            window.location.pathname.startsWith("/calendar/"));
+
+        setInCalendar(!!calendarSection || isCalendarPath);
+
+        // Check if cursor is over interactive elements (links, buttons, date cells, cards)
+        const interactive = target.closest(
+          "a, button, input, textarea, select, [role='button'], .cursor-pointer, [data-calendar-cell='true']"
+        );
         setIsPointer(!!interactive);
 
-        // Detect if hovering over a dark section (like #calendar or dark cards)
-        const darkSection = target.closest("#calendar, .bg-charcoal, .bg-ink, [data-theme='dark']");
+        // Detect if hovering over a dark section
+        const darkSection = target.closest(
+          ".bg-charcoal, .bg-ink, [data-theme='dark'], [data-dark-bg='true']"
+        );
         setIsDarkBg(!!darkSection);
       }
 
-      // Spawn subtle spiritual stardust particles when moving in content sections
+      // Subtle stardust particles trail
       const now = performance.now();
-      if (!inHero && now - lastParticleTime.current > 38) {
+      if (!inHero && now - lastParticleTime.current > 42) {
         lastParticleTime.current = now;
         particleId.current += 1;
+
         const newParticle: Particle = {
           id: particleId.current,
-          x: e.clientX + (Math.random() - 0.5) * 12,
-          y: e.clientY + (Math.random() - 0.5) * 12,
-          size: Math.random() * 2.8 + 1.2,
-          opacity: 0.75,
-          color: Math.random() > 0.4 ? "#D9BE87" : "#B8934A",
+          x: e.clientX + (Math.random() - 0.5) * 10,
+          y: e.clientY + (Math.random() - 0.5) * 10,
+          size: Math.random() * 2.2 + 1,
+          opacity: 0.7,
+          color: inCalendar ? "#C9A75E" : "#B8934A",
         };
-        setParticles((prev) => [...prev.slice(-14), newParticle]);
+        setParticles((prev) => [...prev.slice(-12), newParticle]);
       }
     };
 
@@ -104,11 +120,14 @@ export default function LuxuryCursor() {
     window.addEventListener("mouseup", handleMouseUp);
     document.addEventListener("mouseleave", handleMouseLeave);
 
-    // Fade out particles tick
     const particleInterval = setInterval(() => {
       setParticles((prev) =>
         prev
-          .map((p) => ({ ...p, opacity: p.opacity - 0.045, size: p.size * 0.94 }))
+          .map((p) => ({
+            ...p,
+            opacity: p.opacity - 0.05,
+            size: p.size * 0.93,
+          }))
           .filter((p) => p.opacity > 0.05)
       );
     }, 32);
@@ -126,8 +145,59 @@ export default function LuxuryCursor() {
 
   if (!mounted || !isFinePointer) return null;
 
-  // When inside hero section, the hero has its own custom fluid x-ray cursor
+  // Custom cursor is shown outside hero section
   const showCustomCursor = !inHero;
+
+  // Size calculations: cleanly reduced in calendar section
+  let auraSize = 34;
+  if (inCalendar) {
+    auraSize = isClicking ? 20 : isPointer ? 38 : 24;
+  } else {
+    auraSize = isClicking ? 26 : isPointer ? 50 : 34;
+  }
+
+  // Border and Glow styling
+  let auraBorder = "1px solid rgba(184, 147, 74, 0.4)";
+  let auraBg = "rgba(27, 24, 18, 0.02)";
+  let auraShadow = "0 0 10px rgba(184, 147, 74, 0.12)";
+  let dotBg = "#B8934A";
+  let dotShadow = "0 0 8px 1px rgba(184, 147, 74, 0.6)";
+
+  if (inCalendar) {
+    if (isPointer) {
+      // Distinct, elegant golden amber glow on hover/selection in calendar
+      auraBorder = "1.5px solid rgba(184, 147, 74, 0.85)";
+      auraBg = "rgba(184, 147, 74, 0.12)";
+      auraShadow = "0 0 18px 3px rgba(184, 147, 74, 0.45), inset 0 0 8px rgba(184, 147, 74, 0.2)";
+      dotBg = "#9E7B35";
+      dotShadow = "0 0 10px 2px rgba(184, 147, 74, 0.8)";
+    } else {
+      // Subtle smaller ring when moving around in calendar
+      auraBorder = "1px solid rgba(184, 147, 74, 0.35)";
+      auraBg = "rgba(184, 147, 74, 0.03)";
+      auraShadow = "0 0 8px rgba(184, 147, 74, 0.15)";
+      dotBg = "#B8934A";
+      dotShadow = "0 0 6px 1px rgba(184, 147, 74, 0.5)";
+    }
+  } else if (isPointer) {
+    auraBorder = isDarkBg
+      ? "1.5px solid rgba(217, 190, 135, 0.85)"
+      : "1.5px solid rgba(184, 147, 74, 0.8)";
+    auraBg = isDarkBg
+      ? "rgba(217, 190, 135, 0.15)"
+      : "rgba(184, 147, 74, 0.12)";
+    auraShadow = "0 0 20px 2px rgba(184, 147, 74, 0.3)";
+    dotBg = isDarkBg ? "#F6F3EC" : "#B8934A";
+    dotShadow = isDarkBg
+      ? "0 0 10px 2px rgba(246, 243, 236, 0.7)"
+      : "0 0 8px 1px rgba(184, 147, 74, 0.6)";
+  } else if (isDarkBg) {
+    auraBorder = "1px solid rgba(246, 243, 236, 0.3)";
+    auraBg = "rgba(246, 243, 236, 0.03)";
+    auraShadow = "0 0 10px rgba(246, 243, 236, 0.15)";
+    dotBg = "#F6F3EC";
+    dotShadow = "0 0 8px 1px rgba(246, 243, 236, 0.7)";
+  }
 
   return (
     <>
@@ -137,10 +207,10 @@ export default function LuxuryCursor() {
             initial={{ opacity: 0, scale: 0.6 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.5 }}
-            transition={{ duration: 0.35, ease: "easeOut" }}
+            transition={{ duration: 0.25, ease: "easeOut" }}
             className="fixed inset-0 pointer-events-none z-[99999] overflow-hidden"
           >
-            {/* Spiritual Stardust Trail */}
+            {/* Subtle Stardust Trail */}
             {particles.map((p) => (
               <motion.div
                 key={p.id}
@@ -152,13 +222,13 @@ export default function LuxuryCursor() {
                   height: p.size,
                   backgroundColor: p.color,
                   opacity: p.opacity,
-                  boxShadow: `0 0 8px 1px ${p.color}80`,
+                  boxShadow: `0 0 6px 1px ${p.color}70`,
                   transform: "translate(-50%, -50%)",
                 }}
               />
             ))}
 
-            {/* Outer Expanding Halo / Magnetic Aura */}
+            {/* Outer Ring */}
             <motion.div
               className="absolute rounded-full pointer-events-none flex items-center justify-center"
               style={{
@@ -168,43 +238,17 @@ export default function LuxuryCursor() {
                 translateY: "-50%",
               }}
               animate={{
-                width: isPointer ? 56 : isClicking ? 32 : 38,
-                height: isPointer ? 56 : isClicking ? 32 : 38,
-                backgroundColor: isPointer
-                  ? isDarkBg
-                    ? "rgba(217, 190, 135, 0.18)"
-                    : "rgba(184, 147, 74, 0.15)"
-                  : isDarkBg
-                  ? "rgba(246, 243, 236, 0.04)"
-                  : "rgba(27, 24, 18, 0.03)",
-                borderColor: isPointer
-                  ? isDarkBg
-                    ? "rgba(217, 190, 135, 0.9)"
-                    : "rgba(184, 147, 74, 0.85)"
-                  : isDarkBg
-                  ? "rgba(246, 243, 236, 0.35)"
-                  : "rgba(184, 147, 74, 0.45)",
-                borderWidth: isPointer ? "1.5px" : "1px",
-                borderStyle: "solid",
-                boxShadow: isPointer
-                  ? "0 0 24px 3px rgba(184, 147, 74, 0.35), inset 0 0 12px rgba(184, 147, 74, 0.2)"
-                  : "0 0 14px rgba(184, 147, 74, 0.15)",
-                backdropFilter: isPointer ? "blur(1.5px)" : "none",
+                width: auraSize,
+                height: auraSize,
+                backgroundColor: auraBg,
+                border: auraBorder,
+                boxShadow: auraShadow,
               }}
               transition={{
-                duration: 0.25,
-                ease: [0.22, 1, 0.36, 1],
+                duration: 0.18,
+                ease: "easeOut",
               }}
-            >
-              {/* Pulse ripple ring on hover */}
-              {isPointer && (
-                <motion.div
-                  className="w-full h-full rounded-full border border-gold-soft/50 absolute"
-                  animate={{ scale: [1, 1.45, 1.6], opacity: [0.6, 0.2, 0] }}
-                  transition={{ duration: 1.5, repeat: Infinity, ease: "easeOut" }}
-                />
-              )}
-            </motion.div>
+            />
 
             {/* Central Precision Gold Dot */}
             <motion.div
@@ -216,15 +260,13 @@ export default function LuxuryCursor() {
                 translateY: "-50%",
               }}
               animate={{
-                width: isClicking ? 9 : isPointer ? 4 : 6,
-                height: isClicking ? 9 : isPointer ? 4 : 6,
-                backgroundColor: isDarkBg ? "#F6F3EC" : "#B8934A",
-                boxShadow: isDarkBg
-                  ? "0 0 10px 2px rgba(246, 243, 236, 0.7)"
-                  : "0 0 10px 2px rgba(184, 147, 74, 0.6)",
+                width: isClicking ? 7 : inCalendar ? (isPointer ? 4 : 3.5) : (isPointer ? 4 : 5),
+                height: isClicking ? 7 : inCalendar ? (isPointer ? 4 : 3.5) : (isPointer ? 4 : 5),
+                backgroundColor: dotBg,
+                boxShadow: dotShadow,
               }}
               transition={{
-                duration: 0.15,
+                duration: 0.1,
                 ease: "easeOut",
               }}
             />
@@ -234,3 +276,5 @@ export default function LuxuryCursor() {
     </>
   );
 }
+
+

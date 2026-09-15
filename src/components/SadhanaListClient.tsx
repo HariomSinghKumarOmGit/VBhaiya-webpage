@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { SADHANAS_DATA, SadhanaItem } from "@/data/sadhanas";
 import { useLanguage } from "@/context/LanguageContext";
+import DayTracker from "@/components/DayTracker";
 import {
   LucideSparkles,
   LucideCalendar,
@@ -15,30 +16,27 @@ import {
   LucideArrowRight,
   LucideX,
   LucideVolume2,
-  LucideBookOpen,
   LucideShieldCheck,
-  LucideSun,
 } from "lucide-react";
 
 export default function SadhanaListClient() {
   const { language } = useLanguage();
-  const [selectedFilter, setSelectedFilter] = useState<string>("all");
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [activeModalSadhana, setActiveModalSadhana] = useState<SadhanaItem | null>(null);
-  const [japaCount, setJapaCount] = useState<number>(0);
-  const [japaTarget, setJapaTarget] = useState<number>(108);
 
   const isHi = language === "hi";
 
-  const filterOptions = [
-    { id: "all", label: isHi ? "समस्त साधनाएं" : "All Sadhanas" },
-    { id: "41-day-sadhana", label: isHi ? "41-दिवसीय साधना (4 सितंबर)" : "41-Day Sadhana (4th Sept)" },
-    { id: "vishnu-bhagwan-sadhana", label: isHi ? "विष्णु भगवान साधना (21 दिन)" : "Vishnu Bhagwan (21 Days)" },
-    { id: "durga-maa-sadhana", label: isHi ? "माँ दुर्गा साधना (33 दिन)" : "Durga Maa (33 Days)" },
+  const categoryOptions = [
+    { id: "all", label: isHi ? "समस्त साधनाएं" : "All Sadhanas & Cycles" },
+    { id: "core", label: isHi ? "मुख्य व संकल्प साधनाएं" : "Core & Sankalp Cycles" },
+    { id: "devi", label: isHi ? "श्री यंत्र व देवी साधनाएं" : "Sri Yantra & Devi Sadhanas" },
+    { id: "akhand_jyot", label: isHi ? "अखण्ड ज्योति (3 दीपक)" : "Akhand Jyot (3 Diyas)" },
+    { id: "remedies", label: isHi ? "उपाय, हवन व दीवाली" : "Remedies & Diwali Havan" },
   ];
 
   const filteredSadhanas = SADHANAS_DATA.filter((sadhana) => {
-    if (selectedFilter === "all") return true;
-    return sadhana.id === selectedFilter || sadhana.slug.includes(selectedFilter);
+    if (selectedCategory === "all") return true;
+    return sadhana.category === selectedCategory || sadhana.id.includes(selectedCategory);
   });
 
   return (
@@ -58,23 +56,23 @@ export default function SadhanaListClient() {
           <div className="max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gold/15 text-gold text-xs font-semibold tracking-wider uppercase mb-3 border border-gold/25">
               <LucideSparkles className="w-3.5 h-3.5" />
-              <span>{isHi ? "महासाधना अनुष्ठान" : "Core Sadhana Cycle"}</span>
+              <span>{isHi ? "सालंगपुर हनुमान महासाधना" : "Salangpur Hanuman Mahasadhana"}</span>
             </div>
             <h2 className="font-serif text-2xl sm:text-4xl text-ivory leading-tight mb-3">
               {isHi ? (
                 <>
-                  <span className="text-gold">4 सितंबर</span> से प्रारंभ — 41 दिवसीय अखंड महासाधना
+                  <span className="text-gold">4 सितंबर</span> से प्रारंभ — सालंगपुर हनुमान जी महासाधना
                 </>
               ) : (
                 <>
-                  Starts <span className="text-gold">4th of September</span> · 41-Day Innerlight Sadhana
+                  Starts <span className="text-gold">4th of September</span> · Salangpur Hanuman Ji Sadhana
                 </>
               )}
             </h2>
             <p className="text-ivory/70 text-sm sm:text-base leading-relaxed mb-4">
               {isHi
-                ? "41 दिनों का यह पवित्र चक्र चेतना के रूपांतरण और आंतरिक शांति के लिए समर्पित है। प्रतिदिन रात्रि 8:00 बजे गूगल मीट पर लाइव साधना।"
-                : "A sacred 41-day journey of unbroken meditation, pranayama, and mantra japa starting 4th of September. Transform your inner energy with daily 8:00 PM collective sits."}
+                ? "सालंगपुर हनुमान जी के पावन भयभंजन महामंत्र 'ॐ नमो हनुमते भयभंजनाय सुखं कुरु फट् स्वाहा' को समर्पित अखंड आध्यात्मिक अनुष्ठान। प्रतिदिन रात्रि 8:00 बजे गूगल मीट पर लाइव साधना।"
+                : "A sacred unbroken journey dedicated to the Salangpur Hanuman Ji Bhayabhanjana Mantra (Om Namo Hanumate Bhayabhanjanaya Sukham Kuru Phat Swaha) starting 4th of September. Transform your prana with daily 8:00 PM collective sits."}
             </p>
             <div className="flex items-center gap-3 text-xs sm:text-sm text-gold-soft flex-wrap">
               <span className="flex items-center gap-1.5 bg-white/5 px-3 py-1.5 rounded-lg border border-white/10">
@@ -111,12 +109,12 @@ export default function SadhanaListClient() {
 
       {/* ── Category / Filter Tabs ── */}
       <div className="flex items-center gap-2 sm:gap-3 overflow-x-auto pb-4 mb-8 sm:mb-12 scrollbar-none">
-        {filterOptions.map((filter) => (
+        {categoryOptions.map((filter) => (
           <button
             key={filter.id}
-            onClick={() => setSelectedFilter(filter.id)}
+            onClick={() => setSelectedCategory(filter.id)}
             className={`px-4 sm:px-5 py-2.5 rounded-full text-xs sm:text-sm font-medium transition-all whitespace-nowrap cursor-pointer ${
-              selectedFilter === filter.id
+              selectedCategory === filter.id
                 ? "bg-ink text-ivory shadow-md"
                 : "bg-white/70 hover:bg-white text-ink-soft border border-ink/5"
             }`}
@@ -133,7 +131,7 @@ export default function SadhanaListClient() {
             key={sadhana.id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: idx * 0.1 }}
+            transition={{ duration: 0.5, delay: idx * 0.08 }}
             className="group bg-white/80 hover:bg-white border border-ink/8 rounded-[28px] sm:rounded-[32px] p-6 sm:p-8 flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:-translate-y-1 relative overflow-hidden"
           >
             {/* Top Badge & Duration */}
@@ -184,19 +182,6 @@ export default function SadhanaListClient() {
                 </div>
               </div>
 
-              {/* Pillars preview */}
-              <div className="grid grid-cols-2 gap-2.5 mb-6">
-                {sadhana.pillars.slice(0, 2).map((pillar, pIdx) => (
-                  <div key={pIdx} className="bg-ivory/50 rounded-xl p-3 border border-ink/4">
-                    <div className="text-xs font-semibold text-ink mb-0.5">
-                      {isHi ? pillar.titleHi : pillar.title}
-                    </div>
-                    <div className="text-[0.72rem] text-ink-soft leading-tight line-clamp-2">
-                      {isHi ? pillar.descHi : pillar.desc}
-                    </div>
-                  </div>
-                ))}
-              </div>
             </div>
 
             {/* Bottom Actions */}
@@ -233,52 +218,15 @@ export default function SadhanaListClient() {
         ))}
       </div>
 
-      {/* ── Interactive Japa Counter & Daily Practice Tool ── */}
-      <div className="bg-white/90 border border-ink/8 rounded-[28px] sm:rounded-[36px] p-6 sm:p-10 mb-16 shadow-lg">
-        <div className="max-w-2xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gold/15 text-gold text-xs font-semibold uppercase tracking-wider mb-3">
-            <LucideSun className="w-3.5 h-3.5" />
-            <span>{isHi ? "दैनिक साधना जप काउंटर" : "Daily Sadhana Japa Companion"}</span>
-          </div>
-          <h3 className="font-serif text-2xl sm:text-3xl text-ink mb-2">
-            {isHi ? "108 मनके दिव्य जप माला" : "Sacred 108 Bead Japa Tracker"}
-          </h3>
-          <p className="text-xs sm:text-sm text-ink-soft mb-6">
-            {isHi
-              ? "विष्णु साधना (21 दिन), दुर्गा साधना (33 दिन) या 41-दिवसीय महासाधना के दौरान अपने मंत्र जप की गणना करें।"
-              : "Use this serene japa counter for your daily mantra sit during the 21-Day Vishnu, 33-Day Durga, or 41-Day Sadhana."}
-          </p>
-
-          <div className="flex flex-col items-center justify-center my-6">
-            <button
-              onClick={() => setJapaCount((prev) => (prev + 1) % (japaTarget + 1))}
-              className="w-32 h-32 sm:w-40 sm:h-40 rounded-full border-4 border-gold/40 hover:border-gold bg-[#FAF8F4] flex flex-col items-center justify-center transition-transform active:scale-95 shadow-inner cursor-pointer"
-            >
-              <span className="font-serif text-3xl sm:text-4xl text-ink font-bold">{japaCount}</span>
-              <span className="text-[0.68rem] tracking-widest text-gold uppercase font-bold mt-1">
-                / {japaTarget} {isHi ? "मनके" : "Beads"}
-              </span>
-            </button>
-            <div className="text-xs text-ink-soft mt-3 font-medium">
-              {isHi ? "जप के लिए टैप करें" : "Tap circle with each mantra recitation"}
-            </div>
-          </div>
-
-          <div className="flex items-center justify-center gap-3">
-            <button
-              onClick={() => setJapaCount(0)}
-              className="px-4 py-1.5 rounded-full text-xs font-medium text-ink-soft hover:bg-ink/5 border border-ink/10 transition-colors cursor-pointer"
-            >
-              {isHi ? "रीसेट करें" : "Reset Count"}
-            </button>
-            <button
-              onClick={() => setJapaTarget(japaTarget === 108 ? 1008 : 108)}
-              className="px-4 py-1.5 rounded-full text-xs font-medium bg-gold/15 text-gold hover:bg-gold/25 transition-colors cursor-pointer"
-            >
-              {isHi ? `लक्ष्य: ${japaTarget}` : `Target: ${japaTarget}`}
-            </button>
-          </div>
-        </div>
+      {/* ── Interactive Universal Day Tracker (Replacing Holy Counter) ── */}
+      <div className="mb-16">
+        <DayTracker
+          sadhanaId="universal-day-tracker"
+          sadhanaTitle="Sacred Sadhana Day Tracker"
+          sadhanaTitleHi="साधना दिवस ट्रैकर (संकल्प गणना)"
+          defaultDays={41}
+          accentColor="#B8934A"
+        />
       </div>
 
       {/* ── Quick Preview Modal ── */}
@@ -340,23 +288,7 @@ export default function SadhanaListClient() {
                 </div>
               </div>
 
-              {/* Daily Schedule */}
-              <div className="mb-5">
-                <h4 className="font-serif text-base text-ink mb-3 font-semibold">
-                  {isHi ? "दैनिक साधना समय-सारणी" : "Daily Practice Routine"}
-                </h4>
-                <div className="space-y-2">
-                  {activeModalSadhana.dailySchedule.map((item, idx) => (
-                    <div key={idx} className="bg-white/70 rounded-xl p-3 border border-ink/4 flex gap-3 text-xs">
-                      <span className="font-bold text-gold shrink-0">{item.time}</span>
-                      <div>
-                        <div className="font-semibold text-ink">{isHi ? item.activityHi : item.activity}</div>
-                        <div className="text-ink-soft/80 mt-0.5">{isHi ? item.detailsHi : item.details}</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+
 
               {/* Guidelines */}
               <div className="mb-6">

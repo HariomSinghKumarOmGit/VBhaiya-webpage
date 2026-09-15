@@ -45,6 +45,7 @@ export default function Home() {
       {/* ── Calendar Section ── */}
       <section
         id="calendar"
+        data-calendar-area="true"
         className="relative bg-[#F6F3EC] py-16 sm:py-[110px] pb-20 sm:pb-[130px]"
       >
         <div className="max-w-[1040px] mx-auto px-4 sm:px-7">
