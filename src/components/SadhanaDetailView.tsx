@@ -23,14 +23,10 @@ export default function SadhanaDetailView({ sadhana }: { sadhana: SadhanaItem })
   const isHi = language === "hi";
 
   const handleBack = () => {
-    if (typeof window !== "undefined" && window.history.length > 1) {
-      router.back();
-    } else {
-      router.push("/programs");
-    }
+    router.push("/programs");
   };
 
-  // Listen for Escape or Backspace keys (when not in an input) to go back
+  // Listen for Escape or Backspace keys (when not in an input) to go back to All Sadhanas
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       const isInput = ["INPUT", "TEXTAREA", "SELECT"].includes((e.target as HTMLElement)?.tagName);
@@ -46,23 +42,30 @@ export default function SadhanaDetailView({ sadhana }: { sadhana: SadhanaItem })
 
   return (
     <main className="min-h-screen py-[120px] sm:py-[150px] px-4 sm:px-7 max-w-[960px] mx-auto relative">
-      {/* ── Top Back Navigation Button ── */}
-      <div className="mb-8 flex items-center justify-between gap-4">
+      {/* ── Breadcrumb & Top Navigation ── */}
+      <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <button
           onClick={handleBack}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 hover:bg-white border border-ink/8 text-xs sm:text-sm font-semibold uppercase tracking-wider text-ink-soft hover:text-gold transition-all shadow-2xs hover:shadow-xs cursor-pointer group"
-          title="Go Back (Esc / Backspace)"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 hover:bg-white border border-ink/8 text-xs sm:text-sm font-semibold uppercase tracking-wider text-ink-soft hover:text-gold transition-all shadow-2xs hover:shadow-xs cursor-pointer group w-fit"
+          title="Back to All Sadhanas"
         >
           <LucideArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
-          <span>{isHi ? "वापस जाएं (Back)" : "Back (Esc)"}</span>
+          <span>{isHi ? "समस्त साधनाएं (Back to All Sadhanas)" : "Back to All Sadhanas"}</span>
         </button>
 
-        <Link
-          href="/programs"
-          className="text-xs sm:text-sm font-medium text-ink-soft/70 hover:text-gold transition-colors hidden sm:inline"
-        >
-          {isHi ? "समस्त साधनाएं देखें →" : "All Sadhanas →"}
-        </Link>
+        <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs text-ink-soft/80 font-medium">
+          <Link href="/" className="hover:text-gold transition-colors">
+            {isHi ? "मुख्य पृष्ठ" : "Home"}
+          </Link>
+          <span>/</span>
+          <Link href="/programs" className="hover:text-gold transition-colors">
+            {isHi ? "समस्त साधनाएं" : "All Sadhanas"}
+          </Link>
+          <span>/</span>
+          <span className="text-gold font-semibold truncate max-w-[180px] sm:max-w-none">
+            {isHi ? sadhana.titleHi : sadhana.title}
+          </span>
+        </nav>
       </div>
 
       {/* ── Header / Hero Card ── */}

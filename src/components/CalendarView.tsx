@@ -676,9 +676,6 @@ export default function CalendarView({
               <span className="text-[0.7rem] sm:text-[0.72rem] tracking-[0.1em] text-gold uppercase font-bold group-hover:text-amber-800 transition-colors">
                 Ongoing · 41-Day Sadhana
               </span>
-              <span className="text-[0.68rem] text-gold group-hover:text-ink font-medium tracking-wide transition-colors">
-                All Sadhanas →
-              </span>
             </div>
             <div className="font-serif text-[1.15rem] sm:text-[1.28rem] leading-[1.35] text-ink group-hover:text-amber-950 transition-colors">
               {fmt(ongoingStart, { day: 'numeric', month: 'short' })} –{' '}
