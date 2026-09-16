@@ -1,16 +1,10 @@
 "use client";
 
-import Navigation from "@/components/Navigation";
-import LuxuryCursor from "@/components/LuxuryCursor";
-
 export default function ScripturesPage() {
   const scriptureUrl = "https://lalita-sahasranama-stotram.vercel.app/";
 
   return (
     <main className="min-h-screen bg-charcoal text-ivory pt-[120px] pb-[100px] relative">
-      <LuxuryCursor />
-      <Navigation />
-
       <div className="max-w-[1200px] mx-auto px-5 sm:px-8">
         {/* Header section */}
         <div className="mb-10 text-center sm:text-left flex flex-col sm:flex-row justify-between items-start sm:items-end gap-6">

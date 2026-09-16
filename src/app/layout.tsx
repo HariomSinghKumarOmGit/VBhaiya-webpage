@@ -28,6 +28,9 @@ export const metadata: Metadata = {
   },
 };
 
+import Navigation from "@/components/Navigation";
+import LuxuryCursor from "@/components/LuxuryCursor";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -39,9 +42,12 @@ export default function RootLayout({
         className={`${manrope.variable} ${fraunces.variable} ${notoDevanagari.variable} font-sans`}
       >
         <LanguageProvider>
+          <LuxuryCursor />
+          <Navigation />
           {children}
         </LanguageProvider>
       </body>
     </html>
   );
 }
+

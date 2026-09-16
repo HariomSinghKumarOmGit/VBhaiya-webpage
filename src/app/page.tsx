@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import Navigation from "@/components/Navigation";
 import SpiritualHero from "@/components/SpiritualHero";
 import ThePractice from "@/components/ThePractice";
 import CalendarView from "@/components/CalendarView";
@@ -23,10 +22,7 @@ export default function Home() {
     <main className="min-h-screen">
       <LoadingScreen isLoading={isLoading} />
 
-      <LuxuryCursor />
       <div className="fixed inset-0 pointer-events-none z-[9999] opacity-[0.035] mix-blend-multiply bg-[url('data:image/svg+xml,%3Csvg_xmlns=%22http://www.w3.org/2000/svg%22_width=%22120%22_height=%22120%22%3E%3Cfilter_id=%22n%22%3E%3CfeTurbulence_type=%22fractalNoise%22_baseFrequency=%220.9%22_numOctaves=%222%22_stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect_width=%22100%25%22_height=%22100%25%22_filter=%22url(%23n)%22/%3E%3C/svg%3E')]"></div>
-
-      <Navigation />
 
       {/* ── Hero ── */}
       <SpiritualHero onReady={handleHeroReady} />

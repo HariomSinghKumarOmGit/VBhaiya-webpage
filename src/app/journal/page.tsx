@@ -1,6 +1,8 @@
 import { createClient } from '@/utils/supabase/server';
 import Link from 'next/link';
 
+export const revalidate = 300;
+
 export default async function JournalPage() {
   const supabase = await createClient();
   let posts = [];

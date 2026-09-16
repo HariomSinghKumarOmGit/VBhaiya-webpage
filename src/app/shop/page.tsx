@@ -1,5 +1,7 @@
 import { createClient } from '@/utils/supabase/server';
 
+export const revalidate = 300;
+
 export default async function ShopPage() {
   const supabase = await createClient();
   let items = [];

@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { motion, useMotionValue, useSpring, AnimatePresence } from "framer-motion";
+import { usePathname } from "next/navigation";
 
 interface Particle {
   id: number;
@@ -13,9 +14,12 @@ interface Particle {
 }
 
 export default function LuxuryCursor() {
+  const pathname = usePathname();
+  const isHome = pathname === "/";
+
   const [mounted, setMounted] = useState(false);
   const [isFinePointer, setIsFinePointer] = useState(false);
-  const [inHero, setInHero] = useState(true);
+  const [inHero, setInHero] = useState(isHome);
   const [isPointer, setIsPointer] = useState(false);
   const [isDarkBg, setIsDarkBg] = useState(false);
   const [isClicking, setIsClicking] = useState(false);
@@ -23,6 +27,7 @@ export default function LuxuryCursor() {
   const [particles, setParticles] = useState<Particle[]>([]);
   const lastParticleTime = useRef(0);
   const particleId = useRef(0);
+  const inHeroRef = useRef(isHome);
 
   // Exact mouse position
   const mouseX = useMotionValue(-200);
@@ -37,74 +42,82 @@ export default function LuxuryCursor() {
   const dotSpringY = useSpring(mouseY, { stiffness: 700, damping: 35, mass: 0.08 });
 
   useEffect(() => {
+    inHeroRef.current = isHome;
+    setInHero(isHome);
+    setInCalendar(pathname.startsWith("/calendar"));
+  }, [pathname, isHome]);
+
+  useEffect(() => {
     setMounted(true);
     const hasFinePointer = window.matchMedia("(pointer: fine)").matches;
     setIsFinePointer(hasFinePointer);
     if (!hasFinePointer) return;
 
-    const checkHeroSection = () => {
+    // Fast Intersection Observer or passive scroll for hero section on Home
+    const checkHero = () => {
+      if (!isHome) {
+        inHeroRef.current = false;
+        setInHero(false);
+        return;
+      }
       const heroEl = document.querySelector("section");
       if (heroEl) {
         const rect = heroEl.getBoundingClientRect();
-        if (rect.bottom > 80) {
-          setInHero(true);
-        } else {
-          setInHero(false);
-        }
+        const isInHero = rect.bottom > 80;
+        inHeroRef.current = isInHero;
+        setInHero(isInHero);
       }
     };
 
-    checkHeroSection();
-    window.addEventListener("scroll", checkHeroSection, { passive: true });
-    window.addEventListener("resize", checkHeroSection);
+    checkHero();
+    window.addEventListener("scroll", checkHero, { passive: true });
+    window.addEventListener("resize", checkHero, { passive: true });
+
+    let rafId: number;
 
     const handleMouseMove = (e: MouseEvent) => {
       mouseX.set(e.clientX);
       mouseY.set(e.clientY);
 
-      checkHeroSection();
-
       const target = e.target as HTMLElement | null;
       if (target) {
-        // Detect if hovering in Calendar area
-        const calendarSection = target.closest(
-          "#calendar, [data-calendar-area='true'], .calendar-area"
-        );
-        const isCalendarPath =
-          typeof window !== "undefined" &&
-          (window.location.pathname === "/calendar" ||
-            window.location.pathname.startsWith("/calendar/"));
-
-        setInCalendar(!!calendarSection || isCalendarPath);
-
-        // Check if cursor is over interactive elements (links, buttons, date cells, cards)
+        // Fast interactive check
         const interactive = target.closest(
           "a, button, input, textarea, select, [role='button'], .cursor-pointer, [data-calendar-cell='true']"
         );
         setIsPointer(!!interactive);
 
-        // Detect if hovering over a dark section
+        // Fast dark section check
         const darkSection = target.closest(
           ".bg-charcoal, .bg-ink, [data-theme='dark'], [data-dark-bg='true']"
         );
         setIsDarkBg(!!darkSection);
+
+        // Calendar check
+        if (!pathname.startsWith("/calendar")) {
+          const calendarSection = target.closest(
+            "#calendar, [data-calendar-area='true'], .calendar-area"
+          );
+          setInCalendar(!!calendarSection);
+        }
       }
 
-      // Subtle stardust particles trail
+      // Subtle stardust particles trail (throttled)
       const now = performance.now();
-      if (!inHero && now - lastParticleTime.current > 42) {
+      if (!inHeroRef.current && now - lastParticleTime.current > 50) {
         lastParticleTime.current = now;
         particleId.current += 1;
 
+        const isCal = pathname.startsWith("/calendar");
         const newParticle: Particle = {
           id: particleId.current,
           x: e.clientX + (Math.random() - 0.5) * 10,
           y: e.clientY + (Math.random() - 0.5) * 10,
-          size: Math.random() * 2.2 + 1,
-          opacity: 0.7,
-          color: inCalendar ? "#C9A75E" : "#B8934A",
+          size: Math.random() * 2 + 1,
+          opacity: 0.6,
+          color: isCal ? "#C9A75E" : "#B8934A",
         };
-        setParticles((prev) => [...prev.slice(-12), newParticle]);
+        setParticles((prev) => [...prev.slice(-8), newParticle]);
       }
     };
 
@@ -121,27 +134,30 @@ export default function LuxuryCursor() {
     document.addEventListener("mouseleave", handleMouseLeave);
 
     const particleInterval = setInterval(() => {
-      setParticles((prev) =>
-        prev
+      setParticles((prev) => {
+        if (prev.length === 0) return prev;
+        return prev
           .map((p) => ({
             ...p,
-            opacity: p.opacity - 0.05,
-            size: p.size * 0.93,
+            opacity: p.opacity - 0.08,
+            size: p.size * 0.92,
           }))
-          .filter((p) => p.opacity > 0.05)
-      );
-    }, 32);
+          .filter((p) => p.opacity > 0.05);
+      });
+    }, 45);
 
     return () => {
-      window.removeEventListener("scroll", checkHeroSection);
-      window.removeEventListener("resize", checkHeroSection);
+      window.removeEventListener("scroll", checkHero);
+      window.removeEventListener("resize", checkHero);
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mousedown", handleMouseDown);
       window.removeEventListener("mouseup", handleMouseUp);
       document.removeEventListener("mouseleave", handleMouseLeave);
       clearInterval(particleInterval);
     };
-  }, [inHero, mouseX, mouseY]);
+  }, [isHome, mouseX, mouseY, pathname]);
+
+
 
   if (!mounted || !isFinePointer) return null;
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -15,6 +15,7 @@ import {
   LucideCheckCircle2,
   LucideExternalLink,
   LucideArrowRight,
+  LucideArrowLeft,
   LucideX,
   LucideVolume2,
   LucideShieldCheck,
@@ -27,6 +28,44 @@ export default function SadhanaListClient() {
   const [activeModalSadhana, setActiveModalSadhana] = useState<SadhanaItem | null>(null);
 
   const isHi = language === "hi";
+
+  const closeModal = () => {
+    setActiveModalSadhana(null);
+  };
+
+  const openModal = (sadhana: SadhanaItem) => {
+    setActiveModalSadhana(sadhana);
+    if (typeof window !== "undefined") {
+      window.history.pushState({ modal: "sadhanaPreview" }, "");
+    }
+  };
+
+  // Keyboard navigation for preview modal (Esc / Backspace)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const isInput = ["INPUT", "TEXTAREA", "SELECT"].includes((e.target as HTMLElement)?.tagName);
+      if (activeModalSadhana) {
+        if (e.key === "Escape" || (e.key === "Backspace" && !isInput)) {
+          e.preventDefault();
+          closeModal();
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [activeModalSadhana]);
+
+  // Browser back handling to close modal
+  useEffect(() => {
+    const handlePopState = () => {
+      if (activeModalSadhana) {
+        closeModal();
+      }
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, [activeModalSadhana]);
 
   const categoryOptions = [
     { id: "all", label: isHi ? "समस्त साधनाएं" : "All Sadhanas & Cycles" },
@@ -216,7 +255,7 @@ export default function SadhanaListClient() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={() => setActiveModalSadhana(null)}
+            onClick={closeModal}
             className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[300] flex items-center justify-center p-4 sm:p-6"
           >
             <motion.div
@@ -227,13 +266,15 @@ export default function SadhanaListClient() {
               className="bg-ivory w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-[28px] sm:rounded-[36px] p-6 sm:p-8 shadow-2xl border border-white/60 relative scrollbar-none"
             >
               <button
-                onClick={() => setActiveModalSadhana(null)}
-                className="absolute top-5 right-5 p-2 rounded-full bg-ink/5 hover:bg-ink/10 text-ink transition-colors cursor-pointer"
+                onClick={closeModal}
+                className="absolute top-5 right-5 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-ink/5 hover:bg-ink/10 text-ink text-xs font-semibold transition-colors cursor-pointer"
+                title="Close / Back (Esc)"
               >
-                <LucideX className="w-5 h-5" />
+                <span>{isHi ? "बंद करें" : "Close"}</span>
+                <LucideX className="w-4 h-4" />
               </button>
 
-              <div className="flex items-center gap-2 mb-2">
+              <div className="flex items-center gap-2 mb-2 pr-20">
                 <span
                   className="px-3 py-0.5 rounded-full text-[0.7rem] font-bold uppercase tracking-wider"
                   style={{
@@ -268,30 +309,35 @@ export default function SadhanaListClient() {
                 </div>
               </div>
 
-
-
-
-
-
-
               {/* Modal Actions */}
-              <div className="flex items-center justify-between gap-3 pt-4 border-t border-ink/8">
-                <a
-                  href={activeModalSadhana.meetLink || "https://meet.google.com/odv-evnd-mfy"}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-5 py-2.5 rounded-full bg-gold hover:bg-[#9E7C35] text-ink font-semibold text-xs transition-colors flex items-center gap-1.5"
+              <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-ink/8">
+                <button
+                  type="button"
+                  onClick={closeModal}
+                  className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-white hover:bg-stone-100 border border-ink/10 text-ink text-xs font-semibold transition-colors cursor-pointer"
                 >
-                  <span>{isHi ? "गूगल मीट से जुड़ें" : "Join Google Meet"}</span>
-                  <LucideExternalLink className="w-3.5 h-3.5" />
-                </a>
+                  <LucideArrowLeft className="w-3.5 h-3.5" />
+                  <span>{isHi ? "← वापस (Esc)" : "← Back (Esc)"}</span>
+                </button>
 
-                <Link
-                  href={`/programs/${activeModalSadhana.slug}`}
-                  className="px-5 py-2.5 rounded-full bg-ink text-ivory hover:bg-gold text-xs font-semibold tracking-wide transition-colors"
-                >
-                  {isHi ? "पूर्ण विवरण पृष्ठ →" : "View Full Guide Page →"}
-                </Link>
+                <div className="flex items-center gap-2">
+                  <a
+                    href={activeModalSadhana.meetLink || "https://meet.google.com/odv-evnd-mfy"}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-4 py-2.5 rounded-full bg-gold hover:bg-[#9E7C35] text-ink font-semibold text-xs transition-colors flex items-center gap-1.5"
+                  >
+                    <span>{isHi ? "मीट लिंक" : "Join Meet"}</span>
+                    <LucideExternalLink className="w-3.5 h-3.5" />
+                  </a>
+
+                  <Link
+                    href={`/programs/${activeModalSadhana.slug}`}
+                    className="px-4 py-2.5 rounded-full bg-ink text-ivory hover:bg-gold text-xs font-semibold tracking-wide transition-colors"
+                  >
+                    {isHi ? "पूर्ण पृष्ठ →" : "Full Guide →"}
+                  </Link>
+                </div>
               </div>
             </motion.div>
           </motion.div>

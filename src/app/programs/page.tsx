@@ -14,7 +14,7 @@ export default function ProgramsPage() {
       <div className="mb-10 sm:mb-14 text-center sm:text-left">
         <div className="inline-flex items-center gap-2 text-gold text-xs sm:text-[0.85rem] tracking-[0.08em] mb-3 uppercase font-semibold">
           <LucideFlame className="w-4 h-4" />
-          <span>Sadhanas & Sacred Cycles · साधना व अनुष्ठान</span>
+          <span>Sadhanas & Sacred Cycles</span>
         </div>
         <h1 className="font-serif text-[clamp(2.2rem,5vw,3.6rem)] leading-[1.12] max-w-[720px] text-ink mb-4">
           Immersive sadhanas for inner stillness & divine alignment.
