@@ -32,7 +32,6 @@ export default function SadhanaListClient() {
     { id: "all", label: isHi ? "समस्त साधनाएं" : "All Sadhanas & Cycles" },
     { id: "core", label: isHi ? "मुख्य व संकल्प साधनाएं" : "Core & Sankalp Cycles" },
     { id: "devi", label: isHi ? "श्री यंत्र व देवी साधनाएं" : "Sri Yantra & Devi Sadhanas" },
-    { id: "akhand_jyot", label: isHi ? "अखण्ड ज्योति (3 दीपक)" : "Akhand Jyot (3 Diyas)" },
     { id: "remedies", label: isHi ? "उपाय, हवन व दीवाली" : "Remedies & Diwali Havan" },
   ];
 
@@ -170,7 +169,7 @@ export default function SadhanaListClient() {
               </p>
 
               {/* Sacred Mantra Box */}
-              <div className="bg-[#FAF8F4] border border-ink/6 rounded-2xl p-4 sm:p-5 mb-5">
+              <div className="bg-[#FAF8F4] border border-ink/6 rounded-2xl p-4 sm:p-5 mb-4">
                 <div className="flex items-center justify-between gap-2 mb-2">
                   <span className="text-[0.68rem] tracking-wider uppercase text-gold font-bold">
                     {isHi ? "पवित्र महामंत्र" : "Sacred Mantra"}
@@ -183,6 +182,16 @@ export default function SadhanaListClient() {
                 <div className="text-xs text-ink-soft/75 italic">
                   {isHi ? sadhana.mantraMeaningHi : sadhana.mantraMeaning}
                 </div>
+              </div>
+
+              {/* Healer Advisory Notice / Disclaimer */}
+              <div className="flex items-center gap-2.5 text-xs sm:text-[0.78rem] text-amber-950 font-medium bg-amber-500/10 border border-amber-500/25 px-3.5 py-2.5 rounded-xl shadow-2xs">
+                <LucideShieldCheck className="w-4 h-4 text-[#B8934A] shrink-0" />
+                <span>
+                  {isHi
+                    ? "विशेष सूचना: साधना प्रारंभ करने से पूर्व अपने हीलर / मार्गदर्शक से परामर्श अवश्य लें।"
+                    : "Contact healer / mentor before starting this sadhana."}
+                </span>
               </div>
             </div>
           </motion.div>
