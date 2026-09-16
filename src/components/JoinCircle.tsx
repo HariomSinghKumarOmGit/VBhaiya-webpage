@@ -340,7 +340,7 @@ export default function JoinCircle() {
               title="Telegram Community"
               handle="InnerLight Channel"
               desc="Join for daily spiritual prompts, lunar alerts, and live sittings announcements."
-              href="https://t.me/nMxARoPlst43YzQ9"
+              href="https://t.me/+nMxARoPlst43YzQ9"
               badge="Active Sangha"
               side="left"
               index={4}
