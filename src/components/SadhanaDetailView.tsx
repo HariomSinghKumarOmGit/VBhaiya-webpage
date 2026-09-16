@@ -1,6 +1,8 @@
 "use client";
 
+import { useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { SadhanaItem } from "@/data/sadhanas";
 import { useLanguage } from "@/context/LanguageContext";
 import DayTracker from "@/components/DayTracker";
@@ -16,19 +18,50 @@ import {
 } from "lucide-react";
 
 export default function SadhanaDetailView({ sadhana }: { sadhana: SadhanaItem }) {
+  const router = useRouter();
   const { language } = useLanguage();
   const isHi = language === "hi";
 
+  const handleBack = () => {
+    if (typeof window !== "undefined" && window.history.length > 1) {
+      router.back();
+    } else {
+      router.push("/programs");
+    }
+  };
+
+  // Listen for Escape or Backspace keys (when not in an input) to go back
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const isInput = ["INPUT", "TEXTAREA", "SELECT"].includes((e.target as HTMLElement)?.tagName);
+      if (e.key === "Escape" || (e.key === "Backspace" && !isInput)) {
+        e.preventDefault();
+        handleBack();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   return (
-    <main className="min-h-screen py-[120px] sm:py-[150px] px-4 sm:px-7 max-w-[960px] mx-auto">
-      {/* ── Back Navigation ── */}
-      <div className="mb-8">
+    <main className="min-h-screen py-[120px] sm:py-[150px] px-4 sm:px-7 max-w-[960px] mx-auto relative">
+      {/* ── Top Back Navigation Button ── */}
+      <div className="mb-8 flex items-center justify-between gap-4">
+        <button
+          onClick={handleBack}
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 hover:bg-white border border-ink/8 text-xs sm:text-sm font-semibold uppercase tracking-wider text-ink-soft hover:text-gold transition-all shadow-2xs hover:shadow-xs cursor-pointer group"
+          title="Go Back (Esc / Backspace)"
+        >
+          <LucideArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
+          <span>{isHi ? "वापस जाएं (Back)" : "Back (Esc)"}</span>
+        </button>
+
         <Link
           href="/programs"
-          className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold uppercase tracking-wider text-ink-soft hover:text-gold transition-colors"
+          className="text-xs sm:text-sm font-medium text-ink-soft/70 hover:text-gold transition-colors hidden sm:inline"
         >
-          <LucideArrowLeft className="w-4 h-4" />
-          <span>{isHi ? "समस्त साधनाएं देखें" : "All Sadhanas & Programs"}</span>
+          {isHi ? "समस्त साधनाएं देखें →" : "All Sadhanas →"}
         </Link>
       </div>
 
@@ -108,6 +141,16 @@ export default function SadhanaDetailView({ sadhana }: { sadhana: SadhanaItem })
             {isHi ? sadhana.mantraMeaningHi : sadhana.mantraMeaning}
           </div>
         </div>
+
+        {/* Healer Advisory Notice / Disclaimer */}
+        <div className="flex items-center gap-2.5 text-xs sm:text-sm text-amber-950 font-medium bg-amber-500/10 border border-amber-500/25 px-4 py-3 rounded-xl shadow-2xs mt-4">
+          <LucideShieldCheck className="w-4 h-4 text-[#B8934A] shrink-0" />
+          <span>
+            {isHi
+              ? "विशेष सूचना: साधना प्रारंभ करने से पूर्व अपने हीलर / मार्गदर्शक से परामर्श अवश्य लें।"
+              : "Important Disclaimer: Contact healer / mentor before starting this sadhana."}
+          </span>
+        </div>
       </div>
 
       {/* ── Sacred Overview ── */}
@@ -152,12 +195,13 @@ export default function SadhanaDetailView({ sadhana }: { sadhana: SadhanaItem })
           >
             {isHi ? "गूगल मीट से जुड़ें (8 PM)" : "Join Google Meet Live Sit"}
           </a>
-          <Link
-            href="/programs"
-            className="px-6 py-4 rounded-full bg-white hover:bg-white/80 text-ink border border-ink/10 text-xs font-semibold uppercase tracking-wider transition-colors"
+          <button
+            onClick={handleBack}
+            className="px-6 py-4 rounded-full bg-white hover:bg-white/80 text-ink border border-ink/10 text-xs font-semibold uppercase tracking-wider transition-colors cursor-pointer flex items-center gap-2"
           >
-            {isHi ? "अन्य साधनाएं देखें" : "View Other Sadhanas"}
-          </Link>
+            <LucideArrowLeft className="w-4 h-4" />
+            <span>{isHi ? "वापस जाएं (Back)" : "Back to All Sadhanas"}</span>
+          </button>
         </div>
       </div>
     </main>

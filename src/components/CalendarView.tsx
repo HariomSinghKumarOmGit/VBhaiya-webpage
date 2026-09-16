@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -33,6 +33,7 @@ import {
   LucideGrid,
   LucideInfo,
   LucideSun,
+  LucideArrowLeft,
 } from 'lucide-react';
 
 export default function CalendarView({ initialEvents = [] }: { initialEvents?: any[] }) {
@@ -122,14 +123,58 @@ export default function CalendarView({ initialEvents = [] }: { initialEvents?: a
 
   const openBigMonthlyCalendar = () => {
     setIsMonthModalOpen(true);
+    if (typeof window !== 'undefined') {
+      window.history.pushState({ modal: 'monthlyCalendar' }, '');
+    }
   };
 
   const closeBigMonthlyCalendar = () => {
     setIsMonthModalOpen(false);
+    setSelectedDateDetail(null);
     setCurrentDate(new Date());
     setWeekOffset(0);
     setOpenDay(null);
   };
+
+  // Keyboard navigation listener (Esc to close, Backspace when not typing)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const isInput = ['INPUT', 'TEXTAREA', 'SELECT'].includes((e.target as HTMLElement)?.tagName);
+      if (e.key === 'Escape') {
+        if (selectedDateDetail) {
+          setSelectedDateDetail(null);
+        } else if (isMonthModalOpen) {
+          closeBigMonthlyCalendar();
+        } else if (openDay !== null) {
+          setOpenDay(null);
+        }
+      } else if (e.key === 'Backspace' && !isInput) {
+        if (selectedDateDetail) {
+          e.preventDefault();
+          setSelectedDateDetail(null);
+        } else if (isMonthModalOpen) {
+          e.preventDefault();
+          closeBigMonthlyCalendar();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedDateDetail, isMonthModalOpen, openDay]);
+
+  // Browser back button (popstate) handling to close modal gracefully
+  useEffect(() => {
+    const handlePopState = () => {
+      if (selectedDateDetail) {
+        setSelectedDateDetail(null);
+      } else if (isMonthModalOpen) {
+        closeBigMonthlyCalendar();
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [selectedDateDetail, isMonthModalOpen]);
 
   return (
     <div data-calendar-area="true">
@@ -473,16 +518,18 @@ export default function CalendarView({ initialEvents = [] }: { initialEvents?: a
                   background: hinduMonthTheme.bgGradient,
                 }}
               >
-                {/* Close Button at top right */}
+                {/* Close / Exit Button at top right */}
                 <button
                   onClick={closeBigMonthlyCalendar}
-                  className="absolute top-3 right-3 sm:top-4 sm:right-4 z-20 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/80 hover:bg-white border border-amber-300/50 shadow-sm flex items-center justify-center text-ink-soft hover:text-ink transition-all cursor-pointer"
-                  title="Close Calendar"
+                  className="absolute top-3 right-3 sm:top-4 sm:right-4 z-20 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full bg-white/95 hover:bg-white text-ink border border-amber-300 shadow-sm flex items-center gap-1.5 text-xs font-bold transition-all cursor-pointer hover:scale-105"
+                  title="Close Calendar (Esc / Backspace)"
+                  aria-label="Close Calendar"
                 >
-                  <LucideX size={16} />
+                  <LucideX size={15} />
+                  <span>Exit</span>
                 </button>
 
-                <div className="flex flex-col gap-3 pr-8 sm:pr-0">
+                <div className="flex flex-col gap-3 pr-20 sm:pr-0">
                   {/* Top Left Row: Year Selector (< 2026 >), Jump to Today, Main Deity */}
                   <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
                     {/* Year Navigation Pill (< 2026 >) */}
@@ -525,17 +572,17 @@ export default function CalendarView({ initialEvents = [] }: { initialEvents?: a
                       JUMP TO TODAY
                     </button>
 
-                    {/* Main Deity of the Month Pill */}
-                    <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/90 border border-amber-400/50 text-amber-900 font-serif text-xs sm:text-sm font-semibold shadow-xs">
-                      <span className="text-[0.68rem] sm:text-xs uppercase tracking-wider text-[#B8934A] font-sans font-bold">
-                        MAIN DEITY OF THE MONTH:
+                    {/* Main Deity Badge */}
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/90 border border-amber-400/50 text-amber-900 font-serif text-xs font-semibold shadow-xs">
+                      <span className="text-[0.68rem] uppercase tracking-wider text-[#B8934A] font-sans font-bold">
+                        Main Deity:
                       </span>
-                      <span className="font-bold text-[#643D0C]">{hinduMonthTheme.primaryDeity}</span>
+                      <span>{hinduMonthTheme.primaryDeity}</span>
                     </div>
                   </div>
 
                   {/* Month Title & Devanagari */}
-                  <div className="flex items-baseline gap-2 sm:gap-3 flex-wrap mt-1">
+                  <div className="flex items-baseline gap-2 sm:gap-3 flex-wrap">
                     <h2 className="font-serif text-[1.8rem] sm:text-[2.2rem] md:text-[2.6rem] font-bold text-ink tracking-tight leading-none">
                       {hinduMonthTheme.hinduName}
                     </h2>
@@ -776,6 +823,17 @@ export default function CalendarView({ initialEvents = [] }: { initialEvents?: a
                         </div>
                       </div>
                     )}
+
+                {/* Bottom Exit / Close button for convenience */}
+                <div className="pt-4 sm:pt-6 pb-4 flex items-center justify-center">
+                  <button
+                    onClick={closeBigMonthlyCalendar}
+                    className="px-6 sm:px-8 py-3 rounded-full bg-ink hover:bg-[#B8934A] text-white font-semibold text-xs tracking-wider uppercase transition-all shadow-md flex items-center gap-2 cursor-pointer hover:scale-105"
+                  >
+                    <LucideArrowLeft size={15} />
+                    <span>Close / Exit Calendar</span>
+                  </button>
+                </div>
               </div>
             </motion.div>
           </motion.div>
@@ -799,12 +857,23 @@ export default function CalendarView({ initialEvents = [] }: { initialEvents?: a
               onClick={(e) => e.stopPropagation()}
               className="bg-[#FCFBF8] text-ink rounded-2xl sm:rounded-[24px] p-5 sm:p-6 md:p-8 max-w-lg w-full border border-amber-300 shadow-2xl relative cursor-default max-h-[90vh] overflow-y-auto"
             >
-              <button
-                onClick={() => setSelectedDateDetail(null)}
-                className="absolute top-4 right-4 sm:top-5 sm:right-5 w-8 h-8 rounded-full bg-ink/5 hover:bg-ink/10 flex items-center justify-center text-ink-soft hover:text-ink text-sm transition-colors cursor-pointer"
-              >
-                ✕
-              </button>
+              {/* Header Navigation: Back button + Close button */}
+              <div className="flex items-center justify-between gap-2 mb-3">
+                <button
+                  onClick={() => setSelectedDateDetail(null)}
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-ink/5 hover:bg-ink/10 text-ink text-xs font-semibold tracking-wide transition-colors cursor-pointer"
+                >
+                  <LucideArrowLeft size={13} />
+                  <span>Back to Month</span>
+                </button>
+                <button
+                  onClick={() => setSelectedDateDetail(null)}
+                  className="w-8 h-8 rounded-full bg-ink/5 hover:bg-ink/10 flex items-center justify-center text-ink-soft hover:text-ink text-sm transition-colors cursor-pointer"
+                  title="Close (Esc)"
+                >
+                  ✕
+                </button>
+              </div>
 
               <div className="text-[0.68rem] sm:text-[0.72rem] uppercase tracking-[0.14em] text-[#B8934A] font-bold mb-1">
                 {selectedDateDetail.toLocaleDateString('en-IN', { weekday: 'long' })}
@@ -907,6 +976,16 @@ export default function CalendarView({ initialEvents = [] }: { initialEvents?: a
                   </div>
                 </div>
               )}
+
+              <div className="mt-5 sm:mt-6 pt-3 border-t border-ink/8 flex justify-end">
+                <button
+                  onClick={() => setSelectedDateDetail(null)}
+                  className="w-full sm:w-auto px-6 py-2.5 rounded-full bg-ink hover:bg-[#B8934A] text-white font-semibold text-xs tracking-wider uppercase transition-colors cursor-pointer text-center flex items-center justify-center gap-2"
+                >
+                  <LucideArrowLeft size={14} />
+                  <span>Back to Calendar</span>
+                </button>
+              </div>
             </motion.div>
           </motion.div>
         )}
