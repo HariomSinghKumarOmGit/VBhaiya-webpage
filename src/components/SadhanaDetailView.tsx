@@ -26,16 +26,21 @@ export default function SadhanaDetailView({ sadhana }: { sadhana: SadhanaItem })
     router.push("/programs");
   };
 
-  // Ensure that arriving from home/external routes inserts /programs into history stack
+  // Intercept mobile hardware/browser back button & swipe-back to always pass through /programs
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const prevPath = document.referrer;
-      if (!prevPath.includes("/programs")) {
-        window.history.replaceState({ page: "programs" }, "", "/programs");
-        window.history.pushState({ page: "sadhana-detail" }, "", window.location.href);
-      }
+      window.history.pushState({ sadhanaView: true }, "", window.location.href);
+
+      const handlePopState = () => {
+        router.replace("/programs");
+      };
+
+      window.addEventListener("popstate", handlePopState);
+      return () => {
+        window.removeEventListener("popstate", handlePopState);
+      };
     }
-  }, []);
+  }, [router]);
 
   // Listen for Escape or Backspace keys (when not in an input) to go back to All Sadhanas
   useEffect(() => {

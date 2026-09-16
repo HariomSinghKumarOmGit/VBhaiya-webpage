@@ -668,7 +668,7 @@ export default function CalendarView({
         <Link
           href="/programs/41-day-sadhana"
           prefetch={true}
-          className="bg-white p-5 sm:p-[26px_24px] flex flex-col justify-between cursor-pointer group transition-all duration-200 hover:bg-amber-50/40 relative no-underline"
+          className="bg-white p-5 sm:p-[26px_24px] flex flex-col justify-between cursor-pointer group transition-all duration-200 hover:bg-amber-50/40 active:bg-amber-50/70 active:scale-[0.99] relative no-underline touch-manipulation select-none"
           title="Click to view 41-Day Sadhana guide & details"
         >
           <div>
