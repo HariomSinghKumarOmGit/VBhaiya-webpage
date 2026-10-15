@@ -404,10 +404,605 @@ export function getHinduMonthForGregorian(monthIndex: number): HinduMonthTheme {
   return match || HINDU_LUNAR_MONTHS[0];
 }
 
+export interface MonthSacredData {
+  amavasya: number[];
+  purnima: number[];
+  kaalAshtami: number[];
+  ekadashi: number[];
+}
+
 /**
- * Returns sacred tithi events for a specific month (Amavasya, Purnima, Kaal Ashtami, Kaal Ratri, Ekadashi, Pradosha, Shivratri)
+ * Authentic 2026 Sacred Dates from hindu_calendar_2026_2027.pdf
+ * (Month index: 0 = Jan, 1 = Feb, ..., 11 = Dec)
  */
-export function getMonthSacredDates(year: number, month: number) {
+export const HINDU_SACRED_DATES_2026: Record<number, MonthSacredData> = {
+  0: { // Jan
+    amavasya: [18],
+    purnima: [3],
+    kaalAshtami: [10],
+    ekadashi: [14, 29],
+  },
+  1: { // Feb
+    amavasya: [17],
+    purnima: [1],
+    kaalAshtami: [9],
+    ekadashi: [13, 27],
+  },
+  2: { // Mar
+    amavasya: [18],
+    purnima: [3],
+    kaalAshtami: [11],
+    ekadashi: [14, 29],
+  },
+  3: { // Apr
+    amavasya: [17],
+    purnima: [1],
+    kaalAshtami: [10],
+    ekadashi: [13, 27],
+  },
+  4: { // May
+    amavasya: [16],
+    purnima: [1, 31],
+    kaalAshtami: [9],
+    ekadashi: [13, 27],
+  },
+  5: { // Jun
+    amavasya: [15],
+    purnima: [29],
+    kaalAshtami: [8],
+    ekadashi: [11, 26],
+  },
+  6: { // Jul
+    amavasya: [14],
+    purnima: [29],
+    kaalAshtami: [7],
+    ekadashi: [11, 25],
+  },
+  7: { // Aug
+    amavasya: [12],
+    purnima: [28],
+    kaalAshtami: [5],
+    ekadashi: [9, 24],
+  },
+  8: { // Sep
+    amavasya: [10],
+    purnima: [26],
+    kaalAshtami: [4],
+    ekadashi: [8, 22],
+  },
+  9: { // Oct
+    amavasya: [10],
+    purnima: [25],
+    kaalAshtami: [3],
+    ekadashi: [7, 22],
+  },
+  10: { // Nov
+    amavasya: [9],
+    purnima: [24],
+    kaalAshtami: [1],
+    ekadashi: [5, 21],
+  },
+  11: { // Dec
+    amavasya: [9],
+    purnima: [23],
+    kaalAshtami: [1, 30],
+    ekadashi: [5, 20],
+  },
+};
+
+/**
+ * Authentic 2027 Sacred Dates from hindu_calendar_2026_2027.pdf
+ * (Month index: 0 = Jan, 1 = Feb, ..., 11 = Dec)
+ */
+export const HINDU_SACRED_DATES_2027: Record<number, MonthSacredData> = {
+  0: { // Jan
+    amavasya: [7],
+    purnima: [22],
+    kaalAshtami: [29],
+    ekadashi: [3, 18],
+  },
+  1: { // Feb
+    amavasya: [6],
+    purnima: [21],
+    kaalAshtami: [28],
+    ekadashi: [2, 17],
+  },
+  2: { // Mar
+    amavasya: [8],
+    purnima: [22],
+    kaalAshtami: [30],
+    ekadashi: [4, 18],
+  },
+  3: { // Apr
+    amavasya: [6],
+    purnima: [20],
+    kaalAshtami: [28],
+    ekadashi: [2, 17],
+  },
+  4: { // May
+    amavasya: [6],
+    purnima: [20],
+    kaalAshtami: [28],
+    ekadashi: [2, 16, 31],
+  },
+  5: { // Jun
+    amavasya: [4],
+    purnima: [19],
+    kaalAshtami: [26],
+    ekadashi: [15, 30],
+  },
+  6: { // Jul
+    amavasya: [4],
+    purnima: [18],
+    kaalAshtami: [26],
+    ekadashi: [15, 29],
+  },
+  7: { // Aug
+    amavasya: [2, 31],
+    purnima: [17],
+    kaalAshtami: [25],
+    ekadashi: [13, 28],
+  },
+  8: { // Sep
+    amavasya: [30],
+    purnima: [15],
+    kaalAshtami: [23],
+    ekadashi: [12, 26],
+  },
+  9: { // Oct
+    amavasya: [29],
+    purnima: [15],
+    kaalAshtami: [22],
+    ekadashi: [11, 26],
+  },
+  10: { // Nov
+    amavasya: [28],
+    purnima: [14],
+    kaalAshtami: [21],
+    ekadashi: [9, 24],
+  },
+  11: { // Dec
+    amavasya: [28],
+    purnima: [13],
+    kaalAshtami: [21],
+    ekadashi: [9, 24],
+  },
+};
+
+/**
+ * Authentic 2026 Key Festivals from hindu_calendar_2026_2027.pdf
+ */
+export const HINDU_FESTIVALS_2026: Record<number, Record<number, FestivalInfo[]>> = {
+  0: { // Jan
+    14: [{
+      name: "Makar Sankranti",
+      hindiName: "मकर संक्रांति",
+      deity: "Surya Deva",
+      description: "Auspicious solar transition into Uttarayana. Holy dips, charity, Surya Arghya, and sweet til-gul distribution.",
+      significance: "Victory of light and abundance; beginning of the sun's northward cosmic journey.",
+      color: "#EA580C",
+      tagColor: "#F97316",
+    }],
+    22: [{
+      name: "Vasant Panchami",
+      hindiName: "बसंत पंचमी (सरस्वती पूजा)",
+      deity: "Goddess Saraswati",
+      description: "Arrival of springtime and worship of Maa Saraswati, the embodiment of wisdom, fine arts, music, and pure learning.",
+      significance: "Invocation of highest intellect (Medha), sacred Vidyarambha, and wearing yellow garments.",
+      color: "#D97706",
+      tagColor: "#F59E0B",
+    }],
+  },
+  1: { // Feb
+    15: [{
+      name: "Maha Shivaratri",
+      hindiName: "महाशिवरात्रि",
+      deity: "Lord Shiva & Goddess Parvati",
+      description: "The Great Night of Shiva. Night-long vigils, continuous chanting of Om Namah Shivaya, Bilva leaf offerings, and sacred Shiva lingam abhisheka.",
+      significance: "Transcending the senses, dissolution of ego, and absorption into supreme cosmic stillness.",
+      color: "#0D9488",
+      tagColor: "#14B8A6",
+    }],
+  },
+  2: { // Mar
+    3: [{
+      name: "Holi",
+      hindiName: "होली / होलिका दहन",
+      deity: "Radha - Krishna & Bhakta Prahlada",
+      description: "Joyous celebration of divine love, sacred bonfire burning away impurities, and sharing vibrant sacred colors of unity.",
+      significance: "Triumph of unwavering devotion over tyranny, renewal of hearts, and unconditional divine love.",
+      color: "#DB2777",
+      tagColor: "#F472B6",
+    }],
+    19: [{
+      name: "Chaitra Navratri / Ugadi",
+      hindiName: "चैत्र नवरात्रि / गुड़ी पड़वा / उगादी",
+      deity: "Maa Durga & Lord Brahma",
+      description: "Commencement of the Vedic New Year (Nav Samvatsar) and the nine holy days of Chaitra Navratri sadhana and Devi invocation.",
+      significance: "Spiritual renewal, fresh righteous beginnings, and awakening the primordial creative Shakti.",
+      color: "#D97706",
+      tagColor: "#F59E0B",
+    }],
+  },
+  3: { // Apr
+    26: [{
+      name: "Sita Navami",
+      hindiName: "सीता नवमी",
+      deity: "Maa Sita & Lord Rama",
+      description: "Sacred appearance day of Mother Sita (Janaki Jayanti), the supreme embodiment of dedication, virtue, sacrifice, and grace.",
+      significance: "Cultivating patience, selfless devotion, inner purity, and unwavering fidelity to Dharma.",
+      color: "#E11D48",
+      tagColor: "#FB7185",
+    }],
+  },
+  4: { // May
+    18: [{
+      name: "Jyeshtha Amavasya (Vat Savitri)",
+      hindiName: "ज्येष्ठ अमावस्या (वट सावित्री व्रत)",
+      deity: "Savitri, Satyavan & Lord Yama",
+      description: "Sacred worship around the immortal Banyan tree (Vat Vriksha), praying for family longevity, health, and marital bliss.",
+      significance: "Power of steadfast devotion, triumph over mortality, and deep reverence for nature.",
+      color: "#059669",
+      tagColor: "#10B981",
+    }],
+  },
+  5: { // Jun
+    16: [{
+      name: "Jagannath Ratha Yatra",
+      hindiName: "जगन्नाथ रथ यात्रा",
+      deity: "Lord Jagannath, Balabhadra & Subhadra",
+      description: "Grand chariot procession from Jagannath Temple to Gundicha Temple in Puri, where the Lord of the Universe meets all devotees on the streets.",
+      significance: "Universal grace, all-inclusive divine embrace, and inner pilgrimage of the soul toward liberation.",
+      color: "#DC2626",
+      tagColor: "#EF4444",
+    }],
+  },
+  6: { // Jul
+    29: [{
+      name: "Guru Purnima",
+      hindiName: "गुरु पूर्णिमा (व्यास पूजा)",
+      deity: "Maharishi Ved Vyasa & Guru Parampara",
+      description: "Sacred full moon honoring the spiritual master and lineage of sages who dispel the darkness of ignorance and guide the soul to light.",
+      significance: "Heartfelt gratitude to the Guru, surrender of ego, and rededication to daily spiritual practice.",
+      color: "#CA8A04",
+      tagColor: "#FACC15",
+    }],
+  },
+  7: { // Aug
+    16: [{
+      name: "Hariyali Teej",
+      hindiName: "हरियाली तीज",
+      deity: "Lord Shiva & Goddess Parvati",
+      description: "Monsoon festival celebrating the divine reunion of Shiva and Parvati, welcoming lush green nature with joyful songs and prayers.",
+      significance: "Marital harmony, conjugal happiness, devotion, and alignment with the rejuvenating rhythm of earth.",
+      color: "#059669",
+      tagColor: "#10B981",
+    }],
+    28: [{
+      name: "Raksha Bandhan",
+      hindiName: "रक्षा बंधन (श्रावणी पूर्णिमा)",
+      deity: "Lord Vishnu & Divine Siblinghood",
+      description: "Sacred knot of protection tied on the wrist with prayers for goodwill, duty, and eternal fraternal care.",
+      significance: "Mutual protection, selfless love, family purity, and sacred Gayatri Upakarma renewal.",
+      color: "#BE123C",
+      tagColor: "#E11D48",
+    }],
+  },
+  8: { // Sep
+    4: [{
+      name: "Krishna Janmashtami",
+      hindiName: "श्री कृष्ण जन्माष्टमी",
+      deity: "Bhagavan Sri Krishna",
+      description: "Midnight manifestation of Bhagavan Sri Krishna in Mathura. Fasting, kirtan, bathing of Laddu Gopal, and midnight joy.",
+      significance: "Celebration of Supreme Consciousness, Gita wisdom, playful divine love, and total refuge.",
+      color: "#2563EB",
+      tagColor: "#3B82F6",
+    }],
+    15: [{
+      name: "Ganesh Chaturthi",
+      hindiName: "गणेश चतुर्थी (विनायक चतुर्थी)",
+      deity: "Lord Ganesha",
+      description: "Grand arrival of Vignaharta Lord Ganesha. Modak offerings, Vedic stotras, and hearty joyous family celebrations.",
+      significance: "Dissolution of all obstacles, bestowal of auspicious intellect (Buddhi), and blessed beginnings.",
+      color: "#D97706",
+      tagColor: "#F59E0B",
+    }],
+  },
+  9: { // Oct
+    10: [{
+      name: "Mahalaya",
+      hindiName: "महालय (सर्वपितृ अमावस्या)",
+      deity: "Pitru Devas & Maa Durga",
+      description: "Culmination of Pitru Paksha with sacred Tarpan for departed ancestors, marking the auspicious dawn of Devi Paksha.",
+      significance: "Honoring ancestral lineage, clearing karmic debts, and welcoming Maa Durga down to earth.",
+      color: "#475569",
+      tagColor: "#64748B",
+    }],
+    11: [{
+      name: "Navratri Begins",
+      hindiName: "शारदीय नवरात्रि प्रारंभ (घटस्थापना)",
+      deity: "Maa Durga & Navadurga",
+      description: "Sacred Ghatasthapana commencing nine holy nights of profound Shakti sadhana, fasting, and Akhand Jyoti meditation.",
+      significance: "Awakening divine inner power, conquering negative tendencies, and spiritual transformation.",
+      color: "#BE123C",
+      tagColor: "#E11D48",
+    }],
+    20: [{
+      name: "Dussehra",
+      hindiName: "विजयादशमी / दशहरा",
+      deity: "Lord Rama & Maa Durga",
+      description: "Celebration of Lord Rama conquering Ravana and Goddess Durga annihilating Mahishasura after nine nights of battle.",
+      significance: "Eternal triumph of Dharma over Adharma, truth over falsehood, and divine consciousness over ego.",
+      color: "#EA580C",
+      tagColor: "#FB923C",
+    }],
+  },
+  10: { // Nov
+    8: [{
+      name: "Diwali",
+      hindiName: "दीपावली (महालक्ष्मी पूजन)",
+      deity: "Goddess Lakshmi, Lord Ganesha & Lord Rama",
+      description: "The grand Festival of Lights! Millions of earthen ghee lamps illuminate homes to welcome Lord Rama back to Ayodhya and invoke Maha Lakshmi.",
+      significance: "Total victory of spiritual illumination over inner darkness, abundance, and righteous prosperity.",
+      color: "#D97706",
+      tagColor: "#F59E0B",
+    }],
+    10: [{
+      name: "Govardhan Puja",
+      hindiName: "गोवर्धन पूजा / अन्नकूट",
+      deity: "Lord Krishna & Giriraj Govardhan",
+      description: "Worship of Mount Govardhan and Mother Cow, offering 56 sacred delicacies (Annakut) in reverence of Krishna's divine shelter.",
+      significance: "Deep gratitude to Mother Nature, ecological harmony, and wholehearted surrender to Krishna.",
+      color: "#059669",
+      tagColor: "#10B981",
+    }],
+    11: [{
+      name: "Bhai Dooj",
+      hindiName: "भाई दूज (यम द्वितीया)",
+      deity: "Goddess Yamuna & Yamaraj",
+      description: "Auspicious tilak ceremony between sisters and brothers, commemorating the sacred affection between Yamuna and Yama.",
+      significance: "Protection from untimely suffering, mutual longevity, and celebration of pure familial bond.",
+      color: "#E11D48",
+      tagColor: "#FB7185",
+    }],
+  },
+  11: { // Dec
+    23: [{
+      name: "Dattatreya Jayanti",
+      hindiName: "दत्तात्रेय जयंती",
+      deity: "Lord Dattatreya (Trimurti Avatara)",
+      description: "Appearance anniversary of Lord Dattatreya, the primordial Adi Guru combining the powers of Brahma, Vishnu, and Shiva.",
+      significance: "Non-attachment, viewing the entire universe as Guru, and attainment of ultimate self-knowledge (Atma Jnana).",
+      color: "#B45309",
+      tagColor: "#D97706",
+    }],
+  },
+};
+
+/**
+ * Authentic 2027 Key Festivals from hindu_calendar_2026_2027.pdf
+ */
+export const HINDU_FESTIVALS_2027: Record<number, Record<number, FestivalInfo[]>> = {
+  0: { // Jan
+    14: [{
+      name: "Makar Sankranti",
+      hindiName: "मकर संक्रांति",
+      deity: "Surya Deva",
+      description: "Auspicious solar ingress into Capricorn (Makara Rashi). Sacred bathing, charity, and prayers for health and vigor.",
+      significance: "Welcoming longer, luminous days, harvest blessings, and sun worship.",
+      color: "#EA580C",
+      tagColor: "#F97316",
+    }],
+    22: [{
+      name: "Paush Purnima",
+      hindiName: "पौष पूर्णिमा (शाकंभरी जयंती)",
+      deity: "Lord Vishnu, Surya Deva & Shakambhari Devi",
+      description: "Sacred full moon marking the culmination of the Paush month austerities and the descent of Mother Shakambhari.",
+      significance: "Holy sangam bath, charitable offerings, and prayers for nourishment and abundance.",
+      color: "#D97706",
+      tagColor: "#F59E0B",
+    }],
+  },
+  1: { // Feb
+    11: [{
+      name: "Vasant Panchami",
+      hindiName: "बसंत पंचमी (सरस्वती पूजन)",
+      deity: "Goddess Saraswati",
+      description: "Worship of the Goddess of Knowledge, Music, and the Arts on the arrival of the spring season.",
+      significance: "Initiation into sacred wisdom, intellectual clarity, and divine artistic inspiration.",
+      color: "#D97706",
+      tagColor: "#F59E0B",
+    }],
+  },
+  2: { // Mar
+    6: [{
+      name: "Maha Shivaratri",
+      hindiName: "महाशिवरात्रि",
+      deity: "Lord Shiva & Goddess Parvati",
+      description: "The Great Night of Shiva. Continuous meditative absorption, Rudrabhisheka, fasting, and sacred vigil.",
+      significance: "Awakening of transcendent Shiva consciousness and liberation from karmic bondages.",
+      color: "#0D9488",
+      tagColor: "#14B8A6",
+    }],
+    22: [{
+      name: "Holi",
+      hindiName: "होली / होलिका दहन",
+      deity: "Radha - Krishna & Bhakta Prahlada",
+      description: "Joyful festival of colors commemorating Prahlada's victory and the divine pastimes of Radha-Krishna.",
+      significance: "Forgiveness of past differences, spreading divine love, and burning internal negativities.",
+      color: "#DB2777",
+      tagColor: "#F472B6",
+    }],
+  },
+  3: { // Apr
+    7: [{
+      name: "Chaitra Navratri / Gudi Padwa",
+      hindiName: "चैत्र नवरात्रि / गुड़ी पड़वा",
+      deity: "Maa Durga & Lord Brahma",
+      description: "Commencement of the Hindu New Year (Vikram Samvat) and opening day of 9 days of Navratri worship.",
+      significance: "Righteous resolutions, raising the victory flag (Gudi), and invoking maternal cosmic grace.",
+      color: "#D97706",
+      tagColor: "#F59E0B",
+    }],
+    15: [{
+      name: "Ram Navami",
+      hindiName: "राम नवमी",
+      deity: "Lord Rama",
+      description: "Auspicious birth of Maryada Purushottam Lord Rama at midday in Ayodhya. Chanting of Rama Raksha and Ramayana parayana.",
+      significance: "Establishment of Dharma, exemplary moral conduct, and supreme divine grace.",
+      color: "#D97706",
+      tagColor: "#F59E0B",
+    }],
+  },
+  4: { // May
+    9: [{
+      name: "Akshaya Tritiya",
+      hindiName: "अक्षय तृतीया (आखा तीज)",
+      deity: "Lord Vishnu & Goddess Lakshmi",
+      description: "The day of eternal, imperishable spiritual merit (Akshaya). Ideal for sacred beginnings, charity, and japa.",
+      significance: "Infinite returns on righteous actions and perpetual prosperity.",
+      color: "#B45309",
+      tagColor: "#D97706",
+    }],
+    20: [{
+      name: "Buddha Purnima",
+      hindiName: "बुद्ध पूर्णिमा / वैशाख पूर्णिमा",
+      deity: "Lord Buddha / Lord Vishnu",
+      description: "Sacred full moon commemorating the birth, enlightenment, and Mahaparinirvana of Gautama Buddha.",
+      significance: "Universal compassion, ahimsa (non-violence), deep meditation, and mindful living.",
+      color: "#65A30D",
+      tagColor: "#84CC16",
+    }],
+  },
+  5: { // Jun
+    5: [{
+      name: "Shani Amavasya",
+      hindiName: "शनि अमावस्या (शनि जयंती)",
+      deity: "Lord Shani Dev",
+      description: "Rare and potent confluence of Lord Shani's sacred day and Amavasya. Mustard oil offering, Hanuman Chalisa, and charity to the needy.",
+      significance: "Mitigation of Saturn-related afflictions, karmic purification, patience, and duty.",
+      color: "#1E293B",
+      tagColor: "#334155",
+    }],
+  },
+  6: { // Jul
+    5: [{
+      name: "Jagannath Ratha Yatra",
+      hindiName: "जगन्नाथ रथ यात्रा",
+      deity: "Lord Jagannath, Balabhadra & Subhadra",
+      description: "Grand chariot procession through Puri streets where the Lord personally comes out to bless all beings unconditionally.",
+      significance: "Universal grace, devotion without barriers, and liberation for all who behold the chariot.",
+      color: "#DC2626",
+      tagColor: "#EF4444",
+    }],
+    18: [{
+      name: "Guru Purnima",
+      hindiName: "गुरु पूर्णिमा (व्यास पूजा)",
+      deity: "Maharishi Ved Vyasa & Guru Lineage",
+      description: "Honoring spiritual masters who dispel darkness and illuminate the path of realization.",
+      significance: "Surrendering the ego at the lotus feet of the Guru and deep gratitude for guidance.",
+      color: "#CA8A04",
+      tagColor: "#FACC15",
+    }],
+  },
+  7: { // Aug
+    24: [{
+      name: "Krishna Janmashtami",
+      hindiName: "श्री कृष्ण जन्माष्टमी",
+      deity: "Bhagavan Sri Krishna",
+      description: "Midnight manifestation of Lord Krishna. Continuous bhajans, fasting, and celebrating the birth of the Supreme Lord.",
+      significance: "Supreme devotion, release from earthly fears, and awakening divine joy.",
+      color: "#2563EB",
+      tagColor: "#3B82F6",
+    }],
+  },
+  8: { // Sep
+    4: [{
+      name: "Ganesh Chaturthi",
+      hindiName: "गणेश चतुर्थी",
+      deity: "Lord Ganesha",
+      description: "Grand welcome of Ganapati Bappa into homes and pandals with modak offerings and Vedic prayers.",
+      significance: "Removal of obstacles, gift of discrimination, and joyous spiritual grounding.",
+      color: "#D97706",
+      tagColor: "#F59E0B",
+    }],
+    15: [{
+      name: "Anant Chaturdashi",
+      hindiName: "अनंत चतुर्दशी (गणेश विसर्जन)",
+      deity: "Lord Vishnu (Ananta) & Lord Ganesha",
+      description: "Observance of the sacred Ananta Vrata with the 14-knot sacred thread and grand immersion procession of Ganesha idols.",
+      significance: "Surrender to the infinite nature of the Supreme Lord and seeking eternal divine protection.",
+      color: "#0284C7",
+      tagColor: "#38BDF8",
+    }],
+  },
+  9: { // Oct
+    1: [{
+      name: "Mahalaya",
+      hindiName: "महालय (सर्वपितृ मोक्ष अमावस्या)",
+      deity: "Pitru Devas & Maa Durga",
+      description: "Final day of Pitru Paksha honoring ancestors with tarpan, heralding the glorious onset of Devi Durga's arrival.",
+      significance: "Ancestral peace, liberation of souls, and welcoming cosmic Mother energy.",
+      color: "#475569",
+      tagColor: "#64748B",
+    }],
+    10: [{
+      name: "Dussehra",
+      hindiName: "विजयादशमी / दशहरा",
+      deity: "Lord Rama & Maa Durga",
+      description: "Celebration of victorious righteousness over demonic ego, marking Rama's victory over Ravana and Durga's victory over Mahishasura.",
+      significance: "Triumph of Dharma, inner courage, and destruction of spiritual impediments.",
+      color: "#EA580C",
+      tagColor: "#FB923C",
+    }],
+    29: [{
+      name: "Diwali Puja",
+      hindiName: "दीपावली / महालक्ष्मी पूजन",
+      deity: "Goddess Lakshmi & Lord Ganesha",
+      description: "The grand Festival of Lights celebrating Maha Lakshmi Puja on Amavasya night, lighting countless deepaks.",
+      significance: "Dispelling darkness, welcoming righteous wealth, peace, and spiritual illumination.",
+      color: "#D97706",
+      tagColor: "#F59E0B",
+    }],
+  },
+  10: { // Nov
+    8: [{
+      name: "Dev Deepawali",
+      hindiName: "देव दीपावली (कार्तिक पूर्णिमा)",
+      deity: "Lord Shiva (Tripurari) & Lord Vishnu",
+      description: "Divine Diwali celebrated by the Devas in Kashi (Varanasi), bathing all ghats with millions of glowing diyas.",
+      significance: "Celebration of Shiva slaying the demon Tripurasura and ultimate spiritual illumination.",
+      color: "#B45309",
+      tagColor: "#D97706",
+    }],
+  },
+  11: { // Dec
+    13: [{
+      name: "Margashirsha Purnima",
+      hindiName: "मार्गशीर्ष पूर्णिमा (दत्तात्रेय जयंती)",
+      deity: "Lord Dattatreya & Chandra Deva",
+      description: "Sacred full moon of Margashirsha month, celebrating the appearance of Lord Dattatreya, embodiment of the supreme Guru Tattva.",
+      significance: "Gita wisdom, supreme detachment, and receiving the eternal blessings of the Trinity.",
+      color: "#B45309",
+      tagColor: "#D97706",
+    }],
+  },
+};
+
+/**
+ * Returns sacred tithi events for a specific month (Amavasya, Purnima, Kaal Ashtami, Ekadashi)
+ * Uses accurate standard Udayatithi Panchang data for 2026 and 2027 from PDF;
+ * falls back to calculated peak days for other years.
+ */
+export function getMonthSacredDates(year: number, month: number): MonthSacredData {
+  if (year === 2026 && HINDU_SACRED_DATES_2026[month]) {
+    return HINDU_SACRED_DATES_2026[month];
+  }
+  if (year === 2027 && HINDU_SACRED_DATES_2027[month]) {
+    return HINDU_SACRED_DATES_2027[month];
+  }
+
+  // Algorithmic fallback for years outside 2026-2027
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const monthDays: { day: number; age: number; date: Date }[] = [];
 
@@ -528,9 +1123,18 @@ export function getSacredTithiForDate(date: Date): SacredTithiInfo | null {
 }
 
 /**
- * Returns Major Indian/Hindu Festivals for a given year and month
+ * Returns Major Indian/Hindu Festivals for a given year and month.
+ * Uses exact verified festival dates from hindu_calendar_2026_2027.pdf for 2026 and 2027.
  */
 export function getMajorFestivalsForMonth(year: number, month: number): Record<number, FestivalInfo[]> {
+  if (year === 2026 && HINDU_FESTIVALS_2026[month]) {
+    return HINDU_FESTIVALS_2026[month];
+  }
+  if (year === 2027 && HINDU_FESTIVALS_2027[month]) {
+    return HINDU_FESTIVALS_2027[month];
+  }
+
+  // Fallback for other years
   const sacredDates = getMonthSacredDates(year, month);
   const festivals: Record<number, FestivalInfo[]> = {};
 
@@ -539,376 +1143,28 @@ export function getMajorFestivalsForMonth(year: number, month: number): Record<n
     festivals[day].push(info);
   };
 
-  // January (Month 0)
   if (month === 0) {
     addFestival(14, {
-      name: "Makar Sankranti / Pongal",
+      name: "Makar Sankranti",
       hindiName: "मकर संक्रांति",
       deity: "Surya Deva",
-      description: "Solar transition to Uttarayana. Auspicious donations, holy dip & sweet til-gul distribution.",
-      significance: "Victory of light and harvest blessings.",
+      description: "Solar transition into Uttarayana. Holy dips and sweet til-gul distribution.",
+      significance: "Victory of light and abundance.",
       color: "#EA580C",
       tagColor: "#F97316",
     });
-    if (sacredDates.amavasya.length > 0) {
-      const amavasyaDay = sacredDates.amavasya[0];
-      const panchamDay = (amavasyaDay + 5) % 31;
-      if (panchamDay > 15 && panchamDay <= 31) {
-        addFestival(panchamDay, {
-          name: "Vasant Panchami / Saraswati Puja",
-          hindiName: "बसंत पंचमी",
-          deity: "Goddess Saraswati",
-          description: "Arrival of spring & worship of Goddess of Knowledge, arts and music.",
-          significance: "Yellow garments, aksharabhyasam & wisdom invocation.",
-          color: "#EAB308",
-          tagColor: "#FACC15",
-        });
-      }
-    }
-  }
-
-  // February (Month 1)
-  if (month === 1) {
-    if (sacredDates.amavasya.length > 0) {
-      const amavDay = sacredDates.amavasya[0];
-      const shivratriDay = Math.max(1, amavDay - 1);
-      addFestival(shivratriDay, {
-        name: "Maha Shivratri",
-        hindiName: "महाशिवरात्रि",
-        deity: "Lord Shiva & Goddess Parvati",
-        description: "The Great Night of Shiva. All-night vigils, continuous chanting, bilva leaf offering and lingam abhisheka.",
-        significance: "Transcending the senses and supreme awakening.",
-        color: "#0D9488",
-        tagColor: "#14B8A6",
-      });
-    }
-  }
-
-  // March (Month 2)
-  if (month === 2) {
-    if (sacredDates.purnima.length > 0) {
-      const purnimaDay = sacredDates.purnima[0];
-      addFestival(purnimaDay, {
-        name: "Holika Dahan / Chhoti Holi",
-        hindiName: "होलिका दहन",
-        deity: "Lord Narasimha & Bhakta Prahlada",
-        description: "Sacred bonfire celebrating the victory of genuine devotion over tyrant forces.",
-        significance: "Burning of impurities and ego.",
-        color: "#EA580C",
-        tagColor: "#FB923C",
-      });
-      if (purnimaDay + 1 <= 31) {
-        addFestival(purnimaDay + 1, {
-          name: "Holi (Festival of Colors)",
-          hindiName: "होली",
-          deity: "Radha - Krishna",
-          description: "Joyful celebration of divine colors, forgiveness, harmony and joyous brotherhood.",
-          significance: "Spreading colors of divine love and joy.",
-          color: "#DB2777",
-          tagColor: "#F472B6",
-        });
-      }
-    }
-
-    if (sacredDates.amavasya.length > 0) {
-      const amavDay = sacredDates.amavasya[0];
-      const newYearDay = amavDay + 1;
-      if (newYearDay <= 31) {
-        addFestival(newYearDay, {
-          name: "Chaitra Navratri Start / Gudi Padwa / Ugadi",
-          hindiName: "चैत्र नवरात्रि / नव संवत्सर",
-          deity: "Maa Durga & Lord Brahma",
-          description: "Commencement of Vedic New Year and 9 days of Navratri worship.",
-          significance: "Auspicious new beginnings & spiritual rejuvenation.",
-          color: "#D97706",
-          tagColor: "#F59E0B",
-        });
-      }
-    }
-  }
-
-  // April (Month 3)
-  if (month === 3) {
-    if (sacredDates.amavasya.length > 0) {
-      const ramNavamiDay = (sacredDates.amavasya[0] + 9) % 30;
-      if (ramNavamiDay > 0 && ramNavamiDay <= 30) {
-        addFestival(ramNavamiDay, {
-          name: "Rama Navami",
-          hindiName: "राम नवमी",
-          deity: "Lord Rama",
-          description: "Appearance day of Maryada Purushottam Lord Rama. Reading Ramayana and chanting Ram Naam.",
-          significance: "Establishment of Dharma, courage & truth.",
-          color: "#D97706",
-          tagColor: "#F59E0B",
-        });
-      }
-    }
-
-    if (sacredDates.purnima.length > 0) {
-      addFestival(sacredDates.purnima[0], {
-        name: "Hanuman Jayanti",
-        hindiName: "हनुमान जयंती",
-        deity: "Lord Hanuman",
-        description: "Birth celebration of Lord Hanuman. Chanting Hanuman Chalisa and Sundarkand.",
-        significance: "Unconditional devotion, strength & fearlessness.",
-        color: "#C2410C",
-        tagColor: "#EA580C",
-      });
-    }
-  }
-
-  // May (Month 4)
-  if (month === 4) {
-    if (sacredDates.amavasya.length > 0) {
-      const akshayaDay = Math.min(31, Math.max(1, sacredDates.amavasya[0] + 3));
-      addFestival(akshayaDay, {
-        name: "Akshaya Tritiya",
-        hindiName: "अक्षय तृतीया",
-        deity: "Lord Vishnu & Goddess Lakshmi",
-        description: "Day of imperishable merit. Perfect for new ventures, charity, japa and sadhana.",
-        significance: "Eternal prosperity and unfading blessings.",
-        color: "#B45309",
-        tagColor: "#D97706",
-      });
-    }
-
-    if (sacredDates.purnima.length > 0) {
-      addFestival(sacredDates.purnima[0], {
-        name: "Buddha Purnima / Vaishakha Purnima",
-        hindiName: "बुद्ध पूर्णिमा",
-        deity: "Lord Buddha / Lord Vishnu",
-        description: "Celebration of enlightenment, compassion, and peace.",
-        significance: "Cultivating non-violence and quiet contemplation.",
-        color: "#65A30D",
-        tagColor: "#84CC16",
-      });
-    }
-  }
-
-  // June (Month 5)
-  if (month === 5) {
-    if (sacredDates.purnima.length > 0) {
-      const gangaDay = Math.max(1, sacredDates.purnima[0] - 5);
-      addFestival(gangaDay, {
-        name: "Ganga Dussehra",
-        hindiName: "गंगा दशहरा",
-        deity: "Goddess Ganga",
-        description: "Descent of River Ganga to Earth. Dip in holy waters and prayer for cleansing 10 sins.",
-        significance: "Complete karmic purification and forgiveness.",
-        color: "#0284C7",
-        tagColor: "#38BDF8",
-      });
-    }
-  }
-
-  // July (Month 6)
-  if (month === 6) {
-    if (sacredDates.purnima.length > 0) {
-      addFestival(sacredDates.purnima[0], {
-        name: "Guru Purnima / Vyasa Puja",
-        hindiName: "गुरु पूर्णिमा",
-        deity: "Ved Vyasa & Sacred Guru Lineage",
-        description: "Honoring spiritual masters and mentors who illuminate the path to liberation.",
-        significance: "Expressing gratitude and surrendering ego to the Guru.",
-        color: "#CA8A04",
-        tagColor: "#FACC15",
-      });
-    }
-    if (sacredDates.amavasya.length > 0) {
-      const rathaDay = Math.min(31, sacredDates.amavasya[0] + 2);
-      addFestival(rathaDay, {
-        name: "Jagannath Ratha Yatra",
-        hindiName: "जगन्नाथ रथ यात्रा",
-        deity: "Lord Jagannath, Balabhadra & Subhadra",
-        description: "Grand chariot procession celebrating the Lord meeting his devotees in the streets.",
-        significance: "Supreme devotion and all-inclusive divine grace.",
-        color: "#DC2626",
-        tagColor: "#EF4444",
-      });
-    }
-  }
-
-  // August (Month 7)
-  if (month === 7) {
-    if (sacredDates.purnima.length > 0) {
-      addFestival(sacredDates.purnima[0], {
-        name: "Raksha Bandhan / Shravani Purnima",
-        hindiName: "रक्षा बंधन",
-        deity: "Lord Vishnu & Divine Siblinghood",
-        description: "Sacred thread of protection, selfless love, and Gayatri Upakarma.",
-        significance: "Bond of protection and mutual goodwill.",
-        color: "#E11D48",
-        tagColor: "#FB7185",
-      });
-
-      const janmashtamiDay = Math.min(31, sacredDates.purnima[0] + 8);
-      addFestival(janmashtamiDay, {
-        name: "Krishna Janmashtami",
-        hindiName: "श्री कृष्ण जन्माष्टमी",
-        deity: "Bhagavan Sri Krishna",
-        description: "Midnight manifestation of Sri Krishna. Fasting, kirtan, makhan-mishri bhog and dancing.",
-        significance: "Celebration of Supreme Joy, Wisdom and Gita essence.",
-        color: "#2563EB",
-        tagColor: "#60A5FA",
-      });
-    }
-  }
-
-  // September (Month 8)
-  if (month === 8) {
-    if (sacredDates.amavasya.length > 0) {
-      const ganeshDay = Math.min(30, sacredDates.amavasya[0] + 4);
-      addFestival(ganeshDay, {
-        name: "Ganesh Chaturthi",
-        hindiName: "गणेश चतुर्थी",
-        deity: "Lord Ganesha",
-        description: "Grand installation of Ganapati Bappa. Modak offerings, aarti and joyous celebrations.",
-        significance: "Removal of all hindrances and wisdom bestowed.",
-        color: "#D97706",
-        tagColor: "#F59E0B",
-      });
-
-      const radhaDay = Math.min(30, sacredDates.amavasya[0] + 8);
-      addFestival(radhaDay, {
-        name: "Radha Ashtami",
-        hindiName: "राधा अष्टमी",
-        deity: "Srimati Radharani",
-        description: "Appearance of the embodiment of supreme Bhakti and pure selfless devotion.",
-        significance: "Divine love, humility, and transcendental bliss.",
-        color: "#DB2777",
-        tagColor: "#F472B6",
-      });
-    }
-  }
-
-  // October (Month 9)
-  if (month === 9) {
-    if (sacredDates.amavasya.length > 0) {
-      const navratriStart = Math.min(31, sacredDates.amavasya[0] + 1);
-      addFestival(navratriStart, {
-        name: "Sharad Navratri Start (Ghatasthapana)",
-        hindiName: "शारदीय नवरात्रि प्रारंभ",
-        deity: "Maa Durga & Navadurga",
-        description: "Nine holy nights honoring Goddess Durga, Lakshmi and Saraswati.",
-        significance: "Awakening Shakti for inner victory.",
-        color: "#BE123C",
-        tagColor: "#F43F5E",
-      });
-
-      const dussehraDay = Math.min(31, sacredDates.amavasya[0] + 10);
-      addFestival(dussehraDay, {
-        name: "Vijayadashami / Dussehra",
-        hindiName: "विजयादशमी / दशहरा",
-        deity: "Lord Rama & Goddess Durga",
-        description: "Victory of Lord Rama over Ravana and Maa Durga over Mahishasura.",
-        significance: "Triumph of Dharma, truth and light over dark ego.",
-        color: "#EA580C",
-        tagColor: "#FB923C",
-      });
-    }
-
-    if (sacredDates.purnima.length > 0) {
-      const karwaDay = Math.min(31, sacredDates.purnima[0] + 4);
-      addFestival(karwaDay, {
-        name: "Karwa Chauth",
-        hindiName: "करवा चौथ",
-        deity: "Lord Shiva, Parvati & Chandra Deva",
-        description: "Nirjala fast observed for marital longevity, devotion and family harmony.",
-        significance: "Unconditional love, faith and moon worship.",
-        color: "#E11D48",
-        tagColor: "#FB7185",
-      });
-    }
-  }
-
-  // November (Month 10)
-  if (month === 10) {
-    if (sacredDates.amavasya.length > 0) {
-      const amavDay = sacredDates.amavasya[0];
-      const dhanterasDay = Math.max(1, amavDay - 2);
-      addFestival(dhanterasDay, {
-        name: "Dhanteras (Dhanwantari Jayanti)",
-        hindiName: "धनतेरस",
-        deity: "Lord Dhanwantari & Goddess Lakshmi",
-        description: "Celebration of holistic health, sacred healing herbs, gold and new utensils.",
-        significance: "Divine health, abundance and spiritual wealth.",
-        color: "#CA8A04",
-        tagColor: "#FACC15",
-      });
-
-      addFestival(amavDay, {
-        name: "Diwali / Deepawali (Maha Lakshmi Puja)",
-        hindiName: "दीपावली / महालक्ष्मी पूजन",
-        deity: "Goddess Lakshmi, Lord Ganesha & Lord Rama",
-        description: "Grand Festival of Lights! Lighting millions of deepaks, welcoming Rama to Ayodhya.",
-        significance: "Total victory of light over ignorance and dispelling all darkness.",
-        color: "#D97706",
-        tagColor: "#F59E0B",
-      });
-
-      if (amavDay + 1 <= 30) {
-        addFestival(amavDay + 1, {
-          name: "Govardhan Puja / Annakut",
-          hindiName: "गोवर्धन पूजा / अन्नकूट",
-          deity: "Lord Krishna & Giriraj Govardhan",
-          description: "Massive feast offering 56 bhog to Govardhan Hill and cow veneration.",
-          significance: "Gratitude to Mother Nature and Lord's supreme shelter.",
-          color: "#059669",
-          tagColor: "#10B981",
-        });
-      }
-
-      const chhathDay = Math.min(30, amavDay + 6);
-      addFestival(chhathDay, {
-        name: "Chhath Puja (Sandhya Arghya)",
-        hindiName: "छठ पूजा",
-        deity: "Surya Deva & Chhathi Maiya",
-        description: "Sacred rigorous Sun worship on riverbanks with arghya at dusk and dawn.",
-        significance: "Purity, discipline, life vitality and health.",
-        color: "#EA580C",
-        tagColor: "#F97316",
-      });
-    }
-
-    if (sacredDates.purnima.length > 0) {
-      addFestival(sacredDates.purnima[0], {
-        name: "Dev Deepawali / Kartika Purnima",
-        hindiName: "देव दीपावली / कार्तिक पूर्णिमा",
-        deity: "Lord Shiva (Tripurari) & Lord Vishnu",
-        description: "Celebrated in Varanasi where Gods descend to light ghats with countless lamps.",
-        significance: "Ultimate spiritual illumination and liberation.",
-        color: "#B45309",
-        tagColor: "#D97706",
-      });
-    }
-  }
-
-  // December (Month 11)
-  if (month === 11) {
-    if (sacredDates.purnima.length > 0) {
-      const purnimaDay = sacredDates.purnima[0];
-      const gitaDay = Math.max(1, purnimaDay - 4);
-      addFestival(gitaDay, {
-        name: "Gita Jayanti / Mokshada Ekadashi",
-        hindiName: "गीता जयंती",
-        deity: "Bhagavan Sri Krishna",
-        description: "The auspicious day Bhagavan Krishna spoke the Bhagavad Gita to Arjuna in Kurukshetra.",
-        significance: "Liberation through supreme knowledge, devotion and action.",
-        color: "#2563EB",
-        tagColor: "#3B82F6",
-      });
-
-      addFestival(purnimaDay, {
-        name: "Dattatreya Jayanti",
-        hindiName: "दत्तात्रेय जयंती",
-        deity: "Lord Dattatreya (Trimurti Avatara)",
-        description: "Celebration of the supreme Adi Guru Dattatreya, embodiment of Brahma, Vishnu and Shiva.",
-        significance: "Guru grace, non-attachment and constant learning.",
-        color: "#B45309",
-        tagColor: "#F59E0B",
-      });
-    }
+  } else if (month === 1 && sacredDates.amavasya.length > 0) {
+    addFestival(Math.max(1, sacredDates.amavasya[0] - 1), {
+      name: "Maha Shivaratri",
+      hindiName: "महाशिवरात्रि",
+      deity: "Lord Shiva & Goddess Parvati",
+      description: "The Great Night of Shiva. Continuous chanting and lingam abhisheka.",
+      significance: "Transcending the senses and supreme awakening.",
+      color: "#0D9488",
+      tagColor: "#14B8A6",
+    });
   }
 
   return festivals;
 }
+

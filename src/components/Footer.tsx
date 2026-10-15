@@ -18,6 +18,7 @@ export default function Footer() {
     { label: language === "hi" ? "साधना व कार्यक्रम" : "Sadhana & Programs", href: "/programs" },
     { label: language === "hi" ? "आत्म-चिंतन व विचार" : "Journal & Reflections", href: "/journal" },
     { label: language === "hi" ? "पावन संग्रह" : "Sacred Artifacts", href: "/shop" },
+    { label: language === "hi" ? "प्रश्नोत्तरी (FAQ)" : "FAQ & Guidance", href: "https://waytolight.vercel.app/faq" },
   ];
 
   return (
@@ -51,9 +52,20 @@ export default function Footer() {
             <ul className="space-y-2 text-sm text-white/70">
               {footerLinks.map((link) => (
                 <li key={link.href + link.label}>
-                  <Link href={link.href} className="hover:text-gold transition-colors">
-                    {link.label}
-                  </Link>
+                  {link.href.startsWith("http") ? (
+                    <a
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-gold transition-colors"
+                    >
+                      {link.label}
+                    </a>
+                  ) : (
+                    <Link href={link.href} className="hover:text-gold transition-colors">
+                      {link.label}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>

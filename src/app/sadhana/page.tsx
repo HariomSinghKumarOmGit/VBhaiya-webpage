@@ -3,8 +3,8 @@ import Link from "next/link";
 import { LucideFlame } from "lucide-react";
 
 export const metadata = {
-  title: "Sacred Sadhanas | Innerlight",
-  description: "Explore sacred sadhanas: 41-Day Master Cycle starting 4th of September, 21-Day Shree Vishnu Bhagwan Sadhana, and 33-Day Durga Maa Shakti Sadhana.",
+  title: "Three-Month Sadhana Plan & Sacred Cycles | Innerlight",
+  description: "Three-Month Sadhana Plan for Batches 2024, 2025 and 2026. Currently Active: Month 01 Var Siddhi Vinayak (Ganesha) Sadhana, followed by Mahalaxmi and personalized guidance.",
 };
 
 export default function SadhanaPage() {
@@ -20,7 +20,7 @@ export default function SadhanaPage() {
           Immersive sadhanas for inner stillness & divine alignment.
         </h1>
         <p className="text-ink-soft text-base sm:text-lg max-w-[620px] leading-relaxed">
-          Sacred unbroken cycles tuned with Vedic wisdom, daily mantra japa, and collective evening sits.
+          Sacred unbroken cycles tuned with Vedic wisdom, daily mantra japa, and collective evening sits. Currently featuring the Three-Month Sadhana Plan.
         </p>
       </div>
 
@@ -33,7 +33,7 @@ export default function SadhanaPage() {
           Need Guidance on Choosing Your Sadhana?
         </h3>
         <p className="text-sm sm:text-base text-ink-soft max-w-xl mx-auto mb-6">
-          Whether you are committing to the 41-Day Mahasadhana, Vishnu Bhagwan 21-Day peace cycle, or Durga Maa 33-Day Shakti immersion, our sangha is here to support your practice.
+          Whether you are undertaking the active Month 01 Var Siddhi Vinayak Ganesha sadhana, the 41-Day Salangpur Hanuman Mahasadhana, or preparing for Mahalaxmi, our sangha is here to support your practice.
         </p>
         <div className="flex items-center justify-center gap-4 flex-wrap">
           <a

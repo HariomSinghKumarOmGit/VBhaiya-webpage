@@ -202,21 +202,29 @@ export default function SadhanaDetailView({ sadhana }: { sadhana: SadhanaItem })
         </h3>
         <p className="text-sm sm:text-base text-ink-soft max-w-xl mx-auto mb-6">
           {isHi
-            ? "दैनिक 8:00 बजे गूगल मीट पर संगति के साथ ध्यान करें और आत्म-जागृति का अनुभव प्राप्त करें।"
-            : "Join our global sangha every evening at 8:00 PM IST on Google Meet for guided stillness and shared energy."}
+            ? "शनिवार व रविवार रात्रि 8:00 बजे ज़ूम / गूगल मीट पर सामूहिक ध्यान करें। प्रतिदिन व्यक्तिगत जप व ध्यान सत्र हेतु सीधे व्हाट्सएप पर जुड़ें।"
+            : "Join our global sangha on Saturday & Sunday at 8:00 PM IST on Zoom / Google Meet. For everyday 1-on-1 personal jaap & dhyan sessions, connect directly on WhatsApp."}
         </p>
-        <div className="flex items-center justify-center gap-4 flex-wrap">
+        <div className="flex items-center justify-center gap-3 flex-wrap">
           <a
             href={sadhana.meetLink || "https://meet.google.com/odv-evnd-mfy"}
             target="_blank"
             rel="noopener noreferrer"
-            className="px-8 py-4 rounded-full bg-gold hover:bg-[#A48039] text-ink font-semibold text-xs uppercase tracking-wider transition-all shadow-lg"
+            className="px-7 py-3.5 rounded-full bg-gold hover:bg-[#A48039] text-ink font-semibold text-xs uppercase tracking-wider transition-all shadow-lg"
           >
-            {isHi ? "गूगल मीट से जुड़ें (8 PM)" : "Join Google Meet Live Sit"}
+            {isHi ? "ज़ूम/मीट (शनि-रवि 8 PM)" : "Zoom / Meet (Sat & Sun 8 PM)"}
+          </a>
+          <a
+            href="https://wa.me/918818098688?text=Namaste%20Vishal%20Bhaiya,%20I%20would%20like%20to%20join%20the%20everyday%20personal%20session%20of%20Jaap%20and%20Dhyan."
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-7 py-3.5 rounded-full bg-[#25D366] hover:bg-[#20BA5A] text-[#08221B] font-bold text-xs uppercase tracking-wider transition-all shadow-lg cursor-pointer"
+          >
+            {isHi ? "दैनिक 1-ऑन-1 व्हाट्सएप सत्र" : "Everyday 1-on-1 on WhatsApp"}
           </a>
           <button
             onClick={handleBack}
-            className="px-6 py-4 rounded-full bg-white hover:bg-white/80 text-ink border border-ink/10 text-xs font-semibold uppercase tracking-wider transition-colors cursor-pointer flex items-center gap-2"
+            className="px-6 py-3.5 rounded-full bg-white hover:bg-white/80 text-ink border border-ink/10 text-xs font-semibold uppercase tracking-wider transition-colors cursor-pointer flex items-center gap-2"
           >
             <LucideArrowLeft className="w-4 h-4" />
             <span>{isHi ? "वापस जाएं (Back)" : "Back to All Sadhanas"}</span>

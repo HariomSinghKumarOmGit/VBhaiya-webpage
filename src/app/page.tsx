@@ -4,6 +4,7 @@ import { useState, useCallback } from "react";
 import SpiritualHero from "@/components/SpiritualHero";
 import ThePractice from "@/components/ThePractice";
 import CalendarView from "@/components/CalendarView";
+import MeditationPlaylists from "@/components/MeditationPlaylists";
 import LuxuryCursor from "@/components/LuxuryCursor";
 import LoadingScreen from "@/components/LoadingScreen";
 import JoinCircle from "@/components/JoinCircle";
@@ -61,6 +62,9 @@ export default function Home() {
           <CalendarView initialEvents={[]} />
         </div>
       </section>
+
+      {/* ── Meditation Sessions & Practice Playlists ── */}
+      <MeditationPlaylists />
 
       {/* ── Testimonials: High-End Editorial Presentation ── */}
       <section id="testimonials" className="relative py-[140px] md:py-[170px] bg-white overflow-hidden">

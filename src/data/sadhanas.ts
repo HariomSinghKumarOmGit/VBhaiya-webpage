@@ -62,6 +62,242 @@ export interface SadhanaItem {
 
 export const SADHANAS_DATA: SadhanaItem[] = [
   {
+    id: "var-siddhi-vinayak-sadhana",
+    slug: "var-siddhi-vinayak-sadhana",
+    title: "Var Siddhi Vinayak Sadhana",
+    titleHi: "श्री वरसिद्धि विनायक साधना",
+    deity: "Bhagwan Ganesha (Var Siddhi Vinayak)",
+    deityHi: "भगवान श्री गणेश (वरसिद्धि विनायक)",
+    durationDays: 21,
+    durationLabel: "21-Day Sankalp (Month 01)",
+    durationLabelHi: "21 दिवसीय संकल्प (महीना 01)",
+    startDate: "Currently Active · Batches 2024, 2025, 2026",
+    startDateHi: "वर्तमान में सक्रिय · बैच 2024, 2025, 2026",
+    tag: "Month 01 · Active Cycle",
+    tagHi: "महीना 01 · सक्रिय साधना",
+    badge: "Active Now · 21 Days",
+    badgeHi: "सक्रिय साधना · 21 दिन",
+    accentColor: "#D57C3B",
+    badgeBg: "rgba(213, 124, 59, 0.15)",
+    bgGradient: "linear-gradient(135deg, #2B1608 0%, #150B04 50%, #361705 100%)",
+    summary: "The foundational 21-day initiation of the Three-Month Sadhana Plan for Batches 2024, 2025 and 2026. Dedicated to Lord Var Siddhi Vinayak with daily target of 300–1,000 mantras or min 3 hours japa (70% Mental / 30% Whispering), Thursday–Saturday 3-diya practice, daily gratitude and kindness attitudes, and weekly temple visits.",
+    summaryHi: "बैच 2024, 2025 और 2026 के लिए तीन महीने की साधना यात्रा का पहला महीना। विघ्नहर्ता वरसिद्धि विनायक को समर्पित 21 दिवसीय संकल्प। दैनिक 300-1,000 मंत्र या न्यूनतम 3 घंटे जप (70% मानसिक / 30% फुसफुसाकर), गुरु-शुक्र-शनि 3-दीपक साधना, दैनिक आचरण व साप्ताहिक मंदिर साधना।",
+    mantra: "Om Shreem Hreem Kleem Glaum Gam Varsiddhi Vinayakaya Namaha",
+    mantraDevanagari: "ॐ श्रीं ह्रीं क्लीं ग्लौं गं वरसिद्धि विनायकाय नमः",
+    mantraMeaning: "Salutations to Lord Var Siddhi Vinayak, who removes obstacles and bestows divine boons, spiritual attainments, and auspiciousness.",
+    mantraMeaningHi: "समस्त सिद्धियों के प्रदाता, विघ्नहर्ता, वरदानी भगवान श्री वरसिद्धि विनायक को हमारा कोटि-कोटि नमन।",
+    featured: true,
+    category: "core",
+    categoryHi: "मुख्य साधना",
+    meetingTime: "8:00 PM – 9:00 PM IST (Saturday & Sunday Zoom / Google Meet)",
+    meetingTimeHi: "शाम 8:00 – 9:00 बजे (शनिवार व रविवार ज़ूम / गूगल मीट)",
+    meetLink: "https://meet.google.com/odv-evnd-mfy",
+    dailyCommitment: "300–1,000 Mantras Daily OR Minimum 3 Hours of Japa (70% Mental / 30% Whispering)",
+    dailyCommitmentHi: "प्रतिदिन 300–1,000 मंत्र या कम से कम 3 घंटे जप (70% मानसिक / 30% फुसफुसाकर)",
+    overview: "This 21-day sadhana dedicated to Lord Var Siddhi Vinayak marks the beginning of the Three-Month Sadhana Plan for Batches 2024, 2025, and 2026. The journey establishes deep internal discipline, purifies subconscious impressions, and invokes Bhagwan Ganesha's grace to dissolve all blockages. Complete the 21 days as one continuous sankalpa, or in 3 cycles of 7 days if expecting menstrual cycles. Women may skip during periods, and anyone traveling may also pause and resume upon returning.",
+    overviewHi: "बैच 2024, 2025 और 2026 के साधकों के लिए तीन महीने की साधना यात्रा का यह पहला 21 दिवसीय चरण भगवान वरसिद्धि विनायक को समर्पित है। यह साधना आंतरिक अनुशासन, चित्त शुद्धि और जीवन के समस्त विघ्नों का समूल नाश करने हेतु अति फलदायी है। इसे 21 दिन के एक अखंड संकल्प के रूप में, अथवा माहवारी की स्थिति में 7 दिन के 3 चक्रों में पूरा करें। यात्रा व माहवारी में छूट मान्य है।",
+    pillars: [
+      {
+        title: "Var Siddhi Vinayak Mantra Japa",
+        titleHi: "वरसिद्धि विनायक मंत्र जप",
+        desc: "Mantra: 'Om Shreem Hreem Kleem Glaum Gam Varsiddhi Vinayakaya Namaha'. Daily target: 300 to 1,000 mantras OR minimum 3 hours of japa. Follow 70% Mental Japa (Mansik) + 30% Whispering Jaap.",
+        descHi: "महामंत्र: 'ॐ श्रीं ह्रीं क्लीं ग्लौं गं वरसिद्धि विनायकाय नमः'। दैनिक लक्ष्य: 300 से 1,000 मंत्र या न्यूनतम 3 घंटे जप। 70% मानसिक जप और 30% फुसफुसाकर जप का नियम रखें।"
+      },
+      {
+        title: "Incense & Diya Guidelines",
+        titleHi: "अगरबत्ती, दीपक व बखूर नियम",
+        desc: "Regular members may use agarbatti. Bakhoor members may use Bakhoor oil and light 1, 2, or 3 diyas as convenient.",
+        descHi: "नियमित सदस्य अगरबत्ती का उपयोग कर सकते हैं। बखूर सदस्य बखूर ऑयल का उपयोग कर सकते हैं और अपनी सुविधा के अनुसार 1, 2 या 3 दीपक जला सकते हैं।"
+      },
+      {
+        title: "Three Diyas: Weekly Practice",
+        titleHi: "तीन दीपक: साप्ताहिक साधना",
+        desc: "Throughout all three months on Thursday, Friday, and Saturday: follow the three-diya process. Keep the diyas lit for a minimum of 3 hours; especially expected from serious seekers.",
+        descHi: "तीनों महीनों के दौरान गुरुवार, शुक्रवार और शनिवार को तीन दीपक की प्रक्रिया करें। दीपक कम से कम 3 घंटे जलते रहें; गंभीर साधकों से यह विशेष रूप से अपेक्षित है।"
+      },
+      {
+        title: "Daily Habits & Weekly Temple Visit",
+        titleHi: "दैनिक आचरण व साप्ताहिक मंदिर साधना",
+        desc: "Begin with gratitude, speak with kindness, choose positivity, and trust that your deities and Karim Bhai's shaktis are with you. Visit an old/significant temple weekly with homemade offering and 1-hour whispering japa.",
+        descHi: "दिन की शुरुआत कृतज्ञता से करें, मधुर वाणी रखें, सकारात्मक सोचें, और विश्वास रखें कि इष्ट देव व करीम भाई की शक्तियां आपके साथ हैं। सप्ताह में एक बार घर से भोग बनाकर मंदिर जाएं और 1 घंटा जप करें।"
+      }
+    ],
+    dailySchedule: [
+      {
+        time: "05:00 AM – 07:00 AM",
+        activity: "Morning Var Siddhi Vinayak Japa",
+        activityHi: "प्रातःकालीन वरसिद्धि विनायक जप",
+        details: "Cleanse, light diya/agarbatti, chant with 70% mental / 30% whispering ratio towards daily target.",
+        detailsHi: "स्नान व शुद्धि, दीप/अगरबत्ती प्रज्वलन, 70% मानसिक व 30% फुसफुसाकर मंत्र जप।"
+      },
+      {
+        time: "Everyday",
+        activity: "Personal Session of Jaap & Dhyan (WhatsApp Direct)",
+        activityHi: "दैनिक व्यक्तिगत जप व ध्यान सत्र (सीधे व्हाट्सएप)",
+        details: "1-on-1 personalized guidance with Vishal Bhaiya for sacred mantra jaap and dhyan sittings.",
+        detailsHi: "विशाल भैया के साथ 1-ऑन-1 व्यक्तिगत सत्र: दैनिक मंत्र जप, गहन ध्यान व साधना मार्गदर्शन।"
+      },
+      {
+        time: "Sat & Sun (08:00 PM – 09:00 PM)",
+        activity: "Weekend Collective Sit (Zoom / Google Meet)",
+        activityHi: "सप्ताहांत सामूहिक साधना (ज़ूम / गूगल मीट)",
+        details: "Weekend live collective sit on Zoom / Google Meet with the sangha for silent resonance and shared guidance.",
+        detailsHi: "शनिवार व रविवार रात्रि 8 बजे ज़ूम / गूगल मीट पर सामूहिक साधना व मार्गदर्शन।"
+      },
+      {
+        time: "Thu / Fri / Sat",
+        activity: "Three Diyas Weekly Practice",
+        activityHi: "तीन दीपक साप्ताहिक साधना",
+        details: "Light three diyas and keep them lit for a minimum of 3 hours as instructed.",
+        detailsHi: "निर्देशानुसार तीन दीपक प्रज्वलित करें और कम से कम 3 घंटे अखंड रखें।"
+      }
+    ],
+    guidelines: {
+      en: [
+        "Sankalpa Duration: Complete 21 continuous days OR 7 days × 3 cycles (only for women expecting periods).",
+        "Skip Allowance: Women may skip sadhana during periods. Anyone travelling may also skip and resume upon return.",
+        "Daily Target: Complete 300–1,000 mantras OR sit for minimum 3 hours of japa daily.",
+        "Chanting Ratio: Practice 70% Mental Japa (Mansik) and 30% Whispering Jaap.",
+        "Incense & Diya: Regular members use agarbatti; Bakhoor members use Bakhoor oil and 1, 2, or 3 diyas as convenient.",
+        "Weekly Three Diyas: Keep diyas lit for minimum 3 hours on Thursday, Friday, and Saturday.",
+        "Weekly Temple Visit: Visit an old or significant temple weekly, bring homemade offering, take 3 parikramas with sankalpa, sit quietly, and do 1 hour of whispering japa for temple deities & siddhi shaktis.",
+        "Daily Habits: Begin with gratitude, speak with kindness, stay positive and disciplined, and trust the divine guidance of deities & Karim Bhai's shaktis."
+      ],
+      hi: [
+        "संकल्प अवधि: 21 दिन का अखंड संकल्प, अथवा माहवारी की संभावना वाली महिलाओं के लिए 7 दिन × 3 चक्र।",
+        "साधना में छूट: महिलाएं माहवारी में साधना छोड़ सकती हैं। यात्रा में भी साधना छोड़ी जा सकती है और लौटने पर जारी रखें।",
+        "दैनिक लक्ष्य: प्रतिदिन 300 से 1,000 मंत्र अथवा न्यूनतम 3 घंटे का अखंड जप।",
+        "जप अनुपात: 70% मानसिक जप और 30% फुसफुसाकर जप का नियम रखें।",
+        "धूप व दीपक: नियमित सदस्य अगरबत्ती लगाएं; बखूर सदस्य बखूर ऑयल व 1, 2 या 3 दीपक जलाएं।",
+        "साप्ताहिक 3 दीपक: गुरुवार, शुक्रवार और शनिवार को दीपक कम से कम 3 घंटे तक प्रज्वलित रखें।",
+        "साप्ताहिक मंदिर दर्शन: किसी पुराने/प्रमुख मंदिर जाएं, घर से भोग लाएं, संकल्प लेकर 3 परिक्रमा करें, और 1 घंटा फुसफुसाकर जप करें।",
+        "दैनिक आचरण: दिन की शुरुआत कृतज्ञता से करें, मधुर वाणी रखें, सकारात्मक रहें और इष्ट देव व करीम भाई की शक्तियों पर दृढ़ विश्वास रखें।"
+      ]
+    },
+    benefits: {
+      en: [
+        "Dissolves deep subconscious blockages and material obstacles through Lord Ganesha's grace",
+        "Establishes unbroken spiritual discipline and prana purification for the entire 3-month journey",
+        "Deep mental peace, concentration, and emotional stability",
+        "Divine protection and connection with Karim Bhai's shaktis and sacred deities",
+        "Lays the pure foundation for the upcoming Month 02 Mahalaxmi Sadhana"
+      ],
+      hi: [
+        "भगवान वरसिद्धि विनायक की कृपा से जीवन के समस्त विघ्नों, बाधाओं व नकारात्मक संस्कारों का निवारण",
+        "तीन महीने की संपूर्ण साधना यात्रा हेतु अटूट आध्यात्मिक अनुशासन व प्राण शुद्धि",
+        "गहरी मानसिक शांति, एकाग्रता और भावनात्मक संतुलन",
+        "इष्ट देवों व करीम भाई की शक्तियों की सतत सुरक्षा व आशीर्वाद",
+        "आगामी द्वितीय माह की महालक्ष्मी साधना हेतु पावन आधारशिला की स्थापना"
+      ]
+    },
+    specialInstructions: {
+      en: [
+        "Batches 2024, 2025, and 2026 are currently active in Month 01.",
+        "Maintain the 70% Mental + 30% Whispering chanting ratio during your daily practice.",
+        "Women should pause practice during menstrual cycles and resume without guilt or resetting count.",
+        "Join the 8:00 PM Google Meet collective sit daily for amplified group resonance."
+      ],
+      hi: [
+        "बैच 2024, 2025 और 2026 के लिए प्रथम माह की साधना वर्तमान में सक्रिय है।",
+        "दैनिक जप में 70% मानसिक जप और 30% फुसफुसाकर जप का संतुलन बनाए रखें।",
+        "महिलाएं माहवारी के दिनों में साधना स्थगित रखें और शुद्धि उपरांत वहीं से पुनः प्रारंभ करें।",
+        "सामूहिक शक्ति व अनुशासन हेतु प्रतिदिन रात्रि 8:00 बजे गूगल मीट पर अवश्य जुड़ें।"
+      ]
+    }
+  },
+  {
+    id: "mahalaxmi-sadhana-month-2",
+    slug: "mahalaxmi-sadhana-month-2",
+    title: "Mahalaxmi Sadhana (Month 02)",
+    titleHi: "श्री महालक्ष्मी साधना (महीना 02)",
+    deity: "Maa Mahalaxmi (Vishnupriya)",
+    deityHi: "माँ महालक्ष्मी (विष्णुप्रिया)",
+    durationDays: 21,
+    durationLabel: "21-Day Sankalp (Month 02 · Upcoming)",
+    durationLabelHi: "21 दिवसीय संकल्प (महीना 02 · आगामी)",
+    startDate: "Starts After Month 01 Completion",
+    startDateHi: "महीना 01 पूर्ण होने के पश्चात प्रारंभ",
+    tag: "Month 02 · Upcoming Cycle",
+    tagHi: "महीना 02 · आगामी साधना",
+    badge: "Upcoming · Month 02",
+    badgeHi: "आगामी · द्वितीय माह",
+    accentColor: "#AD6986",
+    badgeBg: "rgba(173, 105, 134, 0.15)",
+    bgGradient: "linear-gradient(135deg, #2B0D18 0%, #15050C 50%, #360E1D 100%)",
+    summary: "The second phase of the Three-Month Sadhana Plan for Batches 2024, 2025 and 2026. Dedicated to Maa Mahalaxmi with the fourfold Mahalakshmi chant, daily target of 300–1,000 mantras or min 3 hours japa, Thursday–Saturday 3-diya practice, and weekly temple visits.",
+    summaryHi: "बैच 2024, 2025 और 2026 के लिए तीन महीने की साधना योजना का दूसरा चरण। माँ महालक्ष्मी के चार पावन मंत्रों को समर्पित 21 दिवसीय संकल्प। दैनिक 300-1,000 मंत्र या 3 घंटे जप, गुरुवार-शनिवार 3-दीपक साधना व मंदिर दर्शन।",
+    mantra: "Om Mahalakshmyai Namo Namah · Om Vishnu Priyayai Namo Namah · Om Dhanapradayai Namo Namah · Om Vishwajananyai Namo Namah",
+    mantraDevanagari: "ॐ महालक्ष्म्यै नमो नमः\nॐ विष्णुप्रियायै नमो नमः\nॐ धनप्रदायै नमो नमः\nॐ विश्वजनन्यै नमो नमः",
+    mantraMeaning: "Salutations to Divine Mother Mahalakshmi, beloved consort of Vishnu, bestower of spiritual and material abundance, and mother of the entire cosmos.",
+    mantraMeaningHi: "परम पावन माँ महालक्ष्मी, श्री विष्णुप्रिया, समस्त धन-ऐश्वर्य प्रदाता और संपूर्ण ब्रह्मांड की जननी को हमारा बारंबार नमन।",
+    featured: false,
+    category: "core",
+    categoryHi: "मुख्य साधना",
+    meetingTime: "8:00 PM – 9:00 PM IST (Daily Collective Sit)",
+    meetingTimeHi: "शाम 8:00 – 9:00 बजे (दैनिक सामूहिक ध्यान)",
+    meetLink: "https://meet.google.com/odv-evnd-mfy",
+    dailyCommitment: "300–1,000 Mantras Daily OR Minimum 3 Hours of Japa",
+    dailyCommitmentHi: "प्रतिदिन 300–1,000 मंत्र या कम से कम 3 घंटे जप",
+    overview: "Following the obstacle-clearing foundation of Lord Var Siddhi Vinayak in Month 01, Month 02 invokes the divine grace of Divine Mother Mahalaxmi. Practitioners engage the four sacred names of the Goddess to cultivate spiritual radiance, inner abundance, and pure devotion.",
+    overviewHi: "प्रथम माह में भगवान वरसिद्धि विनायक द्वारा विघ्न निवारण के उपरांत, द्वितीय माह में माँ महालक्ष्मी की पावन कृपा का आवाहन किया जाता है। साधक देवी के चार दिव्य स्वरूपों के मंत्रों द्वारा आत्मिक शांति, समृद्धि और भक्ति प्राप्त करते हैं।",
+    pillars: [
+      {
+        title: "Fourfold Mahalakshmi Chanting",
+        titleHi: "महालक्ष्मी चतुर्विद मंत्र जप",
+        desc: "Chant the four sacred verses: Om Mahalakshmyai Namo Namah, Om Vishnu Priyayai Namo Namah, Om Dhanapradayai Namo Namah, Om Vishwajananyai Namo Namah.",
+        descHi: "देवी के चारों पावन मंत्रों का निरंतर जप: ॐ महालक्ष्म्यै नमो नमः, ॐ विष्णुप्रियायै नमो नमः, ॐ धनप्रदायै नमो नमः, ॐ विश्वजनन्यै नमो नमः।"
+      },
+      {
+        title: "Three Diyas Weekly (Thu/Fri/Sat)",
+        titleHi: "साप्ताहिक तीन दीपक साधना",
+        desc: "Continue the three-diya process on Thursday, Friday, and Saturday for a minimum of 3 hours.",
+        descHi: "गुरुवार, शुक्रवार और शनिवार को कम से कम 3 घंटे तक तीन दीपक की पावन प्रक्रिया जारी रखें।"
+      }
+    ],
+    dailySchedule: [
+      {
+        time: "Morning / Evening",
+        activity: "Mahalaxmi Japa",
+        activityHi: "महालक्ष्मी मंत्र जप",
+        details: "300–1,000 mantras daily or minimum 3 hours of japa.",
+        detailsHi: "प्रतिदिन 300-1,000 मंत्र या कम से कम 3 घंटे जप।"
+      },
+      {
+        time: "08:00 PM – 09:00 PM",
+        activity: "Live Sangha Sit (Google Meet)",
+        activityHi: "लाइव सामूहिक साधना (गूगल मीट)",
+        details: "Daily evening collective sit on Google Meet.",
+        detailsHi: "प्रतिदिन रात्रि 8 बजे गूगल मीट पर सामूहिक साधना।"
+      }
+    ],
+    guidelines: {
+      en: [
+        "Begins strictly after completing Month 01 (Var Siddhi Vinayak).",
+        "Daily Target: 300–1,000 mantras or minimum 3 hours of japa.",
+        "Follow the 70% Mental + 30% Whispering rule.",
+        "Weekly three-diya practice on Thursday, Friday, and Saturday for min 3 hours."
+      ],
+      hi: [
+        "प्रथम माह (वरसिद्धि विनायक) पूर्ण होने के उपरांत ही प्रारंभ करें।",
+        "दैनिक लक्ष्य: 300-1,000 मंत्र या कम से कम 3 घंटे जप।",
+        "70% मानसिक जप और 30% फुसफुसाकर जप का नियम रखें।",
+        "गुरुवार, शुक्रवार और शनिवार को तीन दीपक कम से कम 3 घंटे प्रज्वलित रखें।"
+      ]
+    },
+    benefits: {
+      en: [
+        "Invokes supreme abundance, spiritual luminosity, and peace of mind",
+        "Deepens alignment with Vishnu and Mahalakshmi consciousness",
+        "Prepares the seeker for personalized Month 03 guidance"
+      ],
+      hi: [
+        "दैवीय ऐश्वर्य, आंतरिक तेज और मानसिक शांति की प्राप्ति",
+        "श्री हरि विष्णु और माँ महालक्ष्मी की चेतना से गहरा जुड़ाव",
+        "तृतीय माह के व्यक्तिगत मार्गदर्शन हेतु साधक की पूर्ण तैयारी"
+      ]
+    }
+  },
+  {
     id: "41-day-sadhana",
     slug: "41-day-sadhana",
     title: "Salangpur Hanuman Ji Mahasadhana",

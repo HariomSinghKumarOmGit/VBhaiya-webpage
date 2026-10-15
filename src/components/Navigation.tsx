@@ -54,6 +54,7 @@ export default function Navigation() {
     { label: isHome && language === "hi" ? "पवित्र शास्त्र" : "Scriptures", sub: "Ancient Wisdom & Chants", href: "/scriptures" },
     { label: isHome && language === "hi" ? "आत्म-चिंतन" : "Journal", sub: "Spiritual Essays", href: "/journal" },
     { label: isHome && language === "hi" ? "पावन संग्रह" : "Shop", sub: "Sacred Artifacts", href: "/shop" },
+    { label: isHome && language === "hi" ? "प्रश्नोत्तरी" : "FAQ", sub: "Questions & Guidance", href: "https://waytolight.vercel.app/faq", external: true },
   ];
 
   return (
@@ -198,17 +199,32 @@ export default function Navigation() {
                       delay: i * 0.05,
                     }}
                   >
-                    <Link
-                      href={item.href}
-                      prefetch={true}
-                      onClick={() => setMenuOpen(false)}
-                      className="group font-serif text-[clamp(1.8rem,5vw,2.8rem)] text-[#FAF7F2] no-underline inline-flex items-baseline gap-3.5 transition-colors duration-300 hover:text-gold-soft cursor-pointer"
-                    >
-                      <span>{item.label}</span>
-                      <span className="text-[0.68rem] tracking-[0.16em] uppercase text-white/30 group-hover:text-gold/70 transition-colors font-sans hidden sm:inline-block">
-                        {item.sub}
-                      </span>
-                    </Link>
+                    {item.external || item.href.startsWith("http") ? (
+                      <a
+                        href={item.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => setMenuOpen(false)}
+                        className="group font-serif text-[clamp(1.8rem,5vw,2.8rem)] text-[#FAF7F2] no-underline inline-flex items-baseline gap-3.5 transition-colors duration-300 hover:text-gold-soft cursor-pointer"
+                      >
+                        <span>{item.label}</span>
+                        <span className="text-[0.68rem] tracking-[0.16em] uppercase text-white/30 group-hover:text-gold/70 transition-colors font-sans hidden sm:inline-block">
+                          {item.sub}
+                        </span>
+                      </a>
+                    ) : (
+                      <Link
+                        href={item.href}
+                        prefetch={true}
+                        onClick={() => setMenuOpen(false)}
+                        className="group font-serif text-[clamp(1.8rem,5vw,2.8rem)] text-[#FAF7F2] no-underline inline-flex items-baseline gap-3.5 transition-colors duration-300 hover:text-gold-soft cursor-pointer"
+                      >
+                        <span>{item.label}</span>
+                        <span className="text-[0.68rem] tracking-[0.16em] uppercase text-white/30 group-hover:text-gold/70 transition-colors font-sans hidden sm:inline-block">
+                          {item.sub}
+                        </span>
+                      </Link>
+                    )}
                   </motion.div>
                 </li>
               ))}

@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { SADHANAS_DATA, SadhanaItem } from "@/data/sadhanas";
 import { useLanguage } from "@/context/LanguageContext";
 import DayTracker from "@/components/DayTracker";
+import ThreeMonthSadhanaPlan from "@/components/ThreeMonthSadhanaPlan";
 import {
   LucideSparkles,
   LucideCalendar,
@@ -19,6 +20,7 @@ import {
   LucideX,
   LucideVolume2,
   LucideShieldCheck,
+  LucideChevronDown,
 } from "lucide-react";
 
 export default function SadhanaListClient() {
@@ -26,6 +28,7 @@ export default function SadhanaListClient() {
   const { language } = useLanguage();
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [activeModalSadhana, setActiveModalSadhana] = useState<SadhanaItem | null>(null);
+  const [showFullPlan, setShowFullPlan] = useState<boolean>(false);
 
   const isHi = language === "hi";
 
@@ -69,7 +72,7 @@ export default function SadhanaListClient() {
 
   const categoryOptions = [
     { id: "all", label: isHi ? "समस्त साधनाएं" : "All Sadhanas & Cycles" },
-    { id: "core", label: isHi ? "मुख्य व संकल्प साधनाएं" : "Core & Sankalp Cycles" },
+    { id: "core", label: isHi ? "3-माह व मुख्य संकल्प" : "3-Month & Core Cycles" },
     { id: "devi", label: isHi ? "श्री यंत्र व देवी साधनाएं" : "Sri Yantra & Devi Sadhanas" },
     { id: "remedies", label: isHi ? "उपाय, हवन व दीवाली" : "Remedies & Diwali Havan" },
   ];
@@ -81,71 +84,133 @@ export default function SadhanaListClient() {
 
   return (
     <div className="w-full">
-      {/* ── Banner: 4th September 41-Day Sadhana Announcement ── */}
+      {/* ── Active Banner: Month 01 Var Siddhi Vinayak Ganesha Sadhana Announcement ── */}
       <motion.div
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="relative overflow-hidden rounded-[24px] sm:rounded-[32px] p-6 sm:p-10 mb-12 sm:mb-16 border border-gold/30 shadow-xl"
+        className="relative overflow-hidden rounded-[24px] sm:rounded-[32px] p-6 sm:p-10 mb-10 border border-[#D57C3B]/40 shadow-xl"
         style={{
-          background: "linear-gradient(135deg, #20180F 0%, #15110B 50%, #2A1F13 100%)",
+          background: "linear-gradient(135deg, #1C0F05 0%, #291508 50%, #150903 100%)",
         }}
       >
-        <div className="absolute top-0 right-0 w-80 h-80 bg-gold/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-0 right-0 w-80 h-80 bg-[#D57C3B]/15 rounded-full blur-3xl pointer-events-none" />
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gold/15 text-gold text-xs font-semibold tracking-wider uppercase mb-3 border border-gold/25">
-              <LucideSparkles className="w-3.5 h-3.5" />
-              <span>{isHi ? "सालंगपुर हनुमान महासाधना" : "Salangpur Hanuman Mahasadhana"}</span>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#D57C3B]/20 text-[#FCD8A5] text-xs font-semibold tracking-wider uppercase mb-3 border border-[#D57C3B]/30">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span>{isHi ? "वर्तमान में सक्रिय · प्रथम माह" : "Currently Active · Month 01"}</span>
             </div>
             <h2 className="font-serif text-2xl sm:text-4xl text-ivory leading-tight mb-3">
               {isHi ? (
                 <>
-                  <span className="text-gold">4 सितंबर</span> से प्रारंभ — सालंगपुर हनुमान जी महासाधना
+                  <span className="text-[#F5AC00]">वरसिद्धि विनायक साधना</span> प्रारंभ — बैच 2024 · 2025 · 2026
                 </>
               ) : (
                 <>
-                  Starts <span className="text-gold">4th of September</span> · Salangpur Hanuman Ji Sadhana
+                  <span className="text-[#F5AC00]">Var Siddhi Vinayak Sadhana</span> is Active · Batches 2024 · 2025 · 2026
                 </>
               )}
             </h2>
-            <p className="text-ivory/70 text-sm sm:text-base leading-relaxed mb-4">
+            <p className="text-ivory/75 text-sm sm:text-base leading-relaxed mb-4">
               {isHi
-                ? "सालंगपुर हनुमान जी के पावन भयभंजन महामंत्र 'ॐ नमो हनुमते भयभंजनाय सुखं कुरु फट् स्वाहा' को समर्पित अखंड आध्यात्मिक अनुष्ठान। प्रतिदिन रात्रि 8:00 बजे गूगल मीट पर लाइव साधना।"
-                : "A sacred unbroken journey dedicated to the Salangpur Hanuman Ji Bhayabhanjana Mantra (Om Namo Hanumate Bhayabhanjanaya Sukham Kuru Phat Swaha) starting 4th of September. Transform your prana with daily 8:00 PM collective sits."}
+                ? "तीन महीने की साधना योजना के अंतर्गत भगवान श्री गणेश को समर्पित 21 दिवसीय पावन अनुष्ठान प्रारंभ हो चुका है। सिद्ध मंत्र 'ॐ श्रीं ह्रीं क्लीं ग्लौं गं वरसिद्धि विनायकाय नमः' का 70% मानसिक व 30% फुसफुसाकर जप करें। शनिवार व रविवार को सामूहिक लाइव ध्यान।"
+                : "Month 01 of the Three-Month Sadhana Plan dedicated to Lord Ganesha (Var Siddhi Vinayak) has officially begun. Practice 300–1,000 daily mantras (70% Mental + 30% Whispering Jaap) with Thursday–Saturday 3-diya process and Saturday–Sunday collective sits."}
             </p>
             <div className="flex items-center gap-3 text-xs sm:text-sm text-gold-soft flex-wrap">
-              <span className="flex items-center gap-1.5 bg-white/5 px-3 py-1.5 rounded-lg border border-white/10">
-                <LucideCalendar className="w-4 h-4 text-gold" />
-                {isHi ? "प्रारंभ: 4 सितंबर · अवधि: 41 दिन" : "Starts: 4th Sept · Duration: 41 Days"}
+              <span className="flex items-center gap-1.5 bg-white/5 px-3 py-1.5 rounded-lg border border-white/10 text-[#FCD8A5]">
+                <LucideCalendar className="w-4 h-4 text-[#D57C3B]" />
+                {isHi ? "अवधि: 21 दिन अखंड संकल्प" : "Duration: 21-Day Sankalp"}
               </span>
-              <span className="flex items-center gap-1.5 bg-white/5 px-3 py-1.5 rounded-lg border border-white/10">
-                <LucideClock className="w-4 h-4 text-gold" />
-                {isHi ? "दैनिक लाइव: 8:00 PM - 9:00 PM" : "Daily Sit: 8:00 PM – 9:00 PM"}
+              <span className="flex items-center gap-1.5 bg-white/5 px-3 py-1.5 rounded-lg border border-white/10 text-[#FCD8A5]">
+                <LucideClock className="w-4 h-4 text-[#D57C3B]" />
+                {isHi ? "लाइव मीट: केवल शनि व रवि (8:00 - 9:00 PM)" : "Live Zoom/Meet: Sat & Sun (8:00–9:00 PM)"}
               </span>
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row md:flex-col gap-3 shrink-0">
+          <div className="flex flex-col sm:flex-row md:flex-col gap-2.5 shrink-0">
+            <button
+              type="button"
+              onClick={() => setShowFullPlan((prev) => !prev)}
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[#D57C3B] hover:bg-[#B8652A] text-white font-semibold text-sm transition-all shadow-lg hover:shadow-[#D57C3B]/20 cursor-pointer"
+            >
+              <span>
+                {showFullPlan
+                  ? (isHi ? "विवरण बंद करें ▲" : "Hide Full Details ▲")
+                  : (isHi ? "संपूर्ण विवरण देखें ▼" : "Show Full Details ▼")}
+              </span>
+              <LucideChevronDown
+                className={`w-4 h-4 transition-transform duration-300 ${
+                  showFullPlan ? "rotate-180" : ""
+                }`}
+              />
+            </button>
             <a
               href="https://meet.google.com/odv-evnd-mfy"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-gold hover:bg-[#A48039] text-ink font-semibold text-sm transition-all shadow-lg hover:shadow-gold/20"
+              className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full bg-white/10 hover:bg-white/15 text-ivory text-xs sm:text-sm font-medium transition-colors border border-white/15"
             >
-              <span>{isHi ? "गूगल मीट से जुड़ें" : "Join Daily Sit (Google Meet)"}</span>
-              <LucideExternalLink className="w-4 h-4" />
+              <span>{isHi ? "ज़ूम/मीट (शनि-रवि 8 PM)" : "Zoom / Meet (Sat & Sun 8 PM)"}</span>
+              <LucideExternalLink className="w-3.5 h-3.5" />
             </a>
-            <Link
-              href="/programs/41-day-sadhana"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-white/10 hover:bg-white/15 text-ivory text-sm font-medium transition-colors border border-white/15"
+            <a
+              href="https://wa.me/918818098688?text=Namaste%20Vishal%20Bhaiya,%20I%20would%20like%20to%20join%20the%20everyday%20personal%20session%20of%20Jaap%20and%20Dhyan."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full bg-[#25D366]/20 hover:bg-[#25D366]/30 text-[#A7F3D0] text-xs font-semibold transition-colors border border-[#25D366]/40 cursor-pointer"
             >
-              <span>{isHi ? "विस्तृत विवरण देखें" : "Explore 41-Day Sadhana"}</span>
-              <LucideArrowRight className="w-4 h-4" />
-            </Link>
+              <span>{isHi ? "दैनिक 1-ऑन-1 सत्र (व्हाट्सएप)" : "Everyday 1-on-1 (WhatsApp)"}</span>
+              <LucideExternalLink className="w-3.5 h-3.5" />
+            </a>
           </div>
         </div>
+
+        {/* ── Expandable Interactive Tab Bar at bottom of banner ── */}
+        <button
+          type="button"
+          onClick={() => setShowFullPlan((prev) => !prev)}
+          className="w-full mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-xs text-[#FCD8A5] hover:text-white transition-colors cursor-pointer group text-left"
+        >
+          <span className="flex items-center gap-2 font-medium tracking-wide">
+            <LucideSparkles className="w-3.5 h-3.5 text-[#F5AC00]" />
+            {isHi
+              ? (showFullPlan ? "3-महीने की साधना का विस्तृत विवरण छुपाएं" : "3-महीने की साधना का संपूर्ण विवरण (नियम, मंत्र, मंदिर विधि) देखें")
+              : (showFullPlan ? "Hide complete 3-Month Sadhana Plan & guidelines" : "Click here to expand complete 3-Month Sadhana Plan & guidelines")}
+          </span>
+          <span className="flex items-center gap-1 font-semibold uppercase text-[0.7rem] bg-white/10 group-hover:bg-white/20 px-3 py-1 rounded-full transition-colors shrink-0 ml-2">
+            {showFullPlan ? (isHi ? "बंद करें ▲" : "Collapse ▲") : (isHi ? "खोलें ▼" : "Expand ▼")}
+          </span>
+        </button>
       </motion.div>
+
+      {/* ── Complete Three-Month Sadhana Plan Section (Collapsible) ── */}
+      <AnimatePresence>
+        {showFullPlan && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.35, ease: "easeInOut" }}
+            className="overflow-hidden mb-10"
+          >
+            <ThreeMonthSadhanaPlan />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ── Section Title: All Sadhanas Archive & Exploration ── */}
+      <div className="mb-6 pt-6 border-t border-ink/8">
+        <h3 className="font-serif text-2xl sm:text-3xl text-ink font-medium">
+          {isHi ? "समस्त साधनाएं व अनुष्ठान संग्रह" : "All Sadhanas & Spiritual Cycles"}
+        </h3>
+        <p className="text-xs sm:text-sm text-ink-soft mt-1">
+          {isHi
+            ? "विभिन्न देवी-देवताओं के लिए निर्धारित संपूर्ण साधना चक्र एवं विस्तृत मार्गदर्शिकाएं।"
+            : "Explore full guidelines, daily schedules, and mantra disciplines for each sacred cycle."}
+        </p>
+      </div>
 
       {/* ── Category / Filter Tabs ── */}
       <div className="flex items-center gap-2 sm:gap-3 overflow-x-auto pb-4 mb-8 sm:mb-12 scrollbar-none">
@@ -237,14 +302,14 @@ export default function SadhanaListClient() {
         ))}
       </div>
 
-      {/* ── Interactive Universal Day Tracker (Replacing Holy Counter) ── */}
+      {/* ── Interactive Universal Day Tracker (Active 21-Day Cycle) ── */}
       <div className="mb-16">
         <DayTracker
-          sadhanaId="universal-day-tracker"
-          sadhanaTitle="Sadhana Day Tracker"
-          sadhanaTitleHi="साधना दिवस ट्रैकर"
-          defaultDays={41}
-          accentColor="#B8934A"
+          sadhanaId="var-siddhi-vinayak-tracker"
+          sadhanaTitle="Var Siddhi Vinayak 21-Day Tracker"
+          sadhanaTitleHi="वरसिद्धि विनायक 21-दिवसीय ट्रैकर"
+          defaultDays={21}
+          accentColor="#D57C3B"
         />
       </div>
 

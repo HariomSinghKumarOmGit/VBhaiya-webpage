@@ -34,7 +34,9 @@ import {
   LucideInfo,
   LucideSun,
   LucideArrowLeft,
+  LucideMessageCircle,
 } from 'lucide-react';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function CalendarView({
   initialEvents = [],
@@ -44,6 +46,8 @@ export default function CalendarView({
   fullPage?: boolean;
 }) {
   const router = useRouter();
+  const { language } = useLanguage();
+  const isHi = language === 'hi';
   const [currentDate, setCurrentDate] = useState(new Date());
   const [weekOffset, setWeekOffset] = useState<number>(0);
   const [openDay, setOpenDay] = useState<number | null>(null);
@@ -239,6 +243,32 @@ export default function CalendarView({
                   </button>
                 </div>
 
+                {/* Quick Year Selection (2026 / 2027) */}
+                <div className="flex items-center gap-1 bg-white border border-amber-400/80 rounded-full p-0.5 shadow-xs">
+                  <button
+                    type="button"
+                    onClick={() => setYear(2026)}
+                    className={`px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                      currentYear === 2026
+                        ? 'bg-[#B8934A] text-white shadow-xs'
+                        : 'text-amber-900 hover:bg-amber-50'
+                    }`}
+                  >
+                    2026
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setYear(2027)}
+                    className={`px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                      currentYear === 2027
+                        ? 'bg-[#B8934A] text-white shadow-xs'
+                        : 'text-amber-900 hover:bg-amber-50'
+                    }`}
+                  >
+                    2027
+                  </button>
+                </div>
+
                 {/* Jump to Today Button Pill */}
                 <button
                   onClick={goToToday}
@@ -246,6 +276,18 @@ export default function CalendarView({
                 >
                   JUMP TO TODAY
                 </button>
+
+                {/* Authentic PDF download / view pill */}
+                <a
+                  href="/hindu_calendar_2026_2027.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/95 hover:bg-white text-amber-900 border border-amber-400/60 shadow-xs text-xs font-bold transition-all cursor-pointer no-underline"
+                  title="View / Download Official Hindu Calendar 2026-2027 PDF"
+                >
+                  <span>📄</span>
+                  <span>Calendar PDF</span>
+                </a>
 
                 {/* Main Deity Badge */}
                 <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/90 border border-amber-400/50 text-amber-900 font-serif text-xs font-semibold shadow-xs">
@@ -379,14 +421,14 @@ export default function CalendarView({
                               Today
                             </span>
                           )}
+                          {dayFestivals.length > 0 && (
+                            <span className="text-[0.72rem] sm:text-xs text-amber-500" title={dayFestivals.map(f => f.name).join(', ')}>
+                              ✨
+                            </span>
+                          )}
                           {sacredTithi && (
                             <span className="text-[0.72rem] sm:text-xs" title={sacredTithi.title}>
                               {sacredTithi.icon}
-                            </span>
-                          )}
-                          {dayFestivals.length > 0 && !sacredTithi && (
-                            <span className="text-[0.72rem] sm:text-xs" title={dayFestivals[0].name}>
-                              ✨
                             </span>
                           )}
                         </div>
@@ -397,10 +439,10 @@ export default function CalendarView({
                         {dayFestivals.map((fest, fIdx) => (
                           <div
                             key={fIdx}
-                            className="text-[0.58rem] md:text-[0.66rem] font-bold px-1.5 py-0.5 rounded bg-amber-100 text-amber-900 border border-amber-300/60 truncate shadow-2xs hidden md:flex items-center gap-0.5"
+                            className="text-[0.52rem] sm:text-[0.58rem] md:text-[0.66rem] font-bold px-1 sm:px-1.5 py-0.5 rounded bg-amber-100 text-amber-900 border border-amber-300/60 truncate shadow-2xs flex items-center gap-0.5"
                             title={`${fest.name}: ${fest.description}`}
                           >
-                            <span>✨</span>
+                            <span className="text-[0.6rem] shrink-0">✨</span>
                             <span className="truncate">{fest.name}</span>
                           </div>
                         ))}
@@ -604,7 +646,9 @@ export default function CalendarView({
                 {WEEKLY_DEITIES[selectedDateDetail.getDay()] && (
                   <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-[16px] bg-white border border-ink/8 shadow-xs">
                     <div className="text-[0.68rem] sm:text-xs uppercase tracking-wider text-[#B8934A] font-semibold mb-1">
-                      Scheduled Daily Sadhana (8:00 PM – 9:00 PM)
+                      {isHi
+                        ? "लाइव साधना (शनि व रवि: 8:00 – 9:00 PM | प्रतिदिन: व्यक्तिगत सत्र)"
+                        : "Live Sadhana (Sat & Sun: 8:00 PM – 9:00 PM | Everyday: Personal Session)"}
                     </div>
                     <div className="font-serif text-base sm:text-lg font-semibold text-ink">
                       {WEEKLY_DEITIES[selectedDateDetail.getDay()].title}
@@ -659,32 +703,77 @@ export default function CalendarView({
      ═══════════════════════════════════════════════════════════════ */
   return (
     <div data-calendar-area="true">
+      {/* ── New Banner: Everyday Personal Session of Jaap & Dhyan (Direct to WhatsApp) ── */}
+      <a
+        href="https://wa.me/918818098688?text=Namaste%20Vishal%20Bhaiya,%20I%20would%20like%20to%20join%20the%20everyday%20personal%20session%20of%20Jaap%20and%20Dhyan."
+        target="_blank"
+        rel="noopener noreferrer"
+        className="block group relative overflow-hidden rounded-2xl sm:rounded-[26px] p-5 sm:p-6 mb-6 border border-emerald-500/30 shadow-md transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 cursor-pointer no-underline"
+        style={{
+          background: "linear-gradient(135deg, #0D261F 0%, #153D32 50%, #1A493D 100%)",
+        }}
+        title={isHi ? "व्हाट्सएप पर व्यक्तिगत सत्र हेतु संदेश भेजें" : "Connect on WhatsApp for Everyday Personal Jaap & Dhyan"}
+      >
+        <div className="absolute top-0 right-0 w-80 h-80 bg-emerald-400/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-400/20 text-[#A7F3D0] border border-emerald-400/30 text-[0.68rem] sm:text-xs font-bold uppercase tracking-wider mb-2.5">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+              <span className="w-2 h-2 rounded-full bg-emerald-400 -ml-4" />
+              <span>{isHi ? "दैनिक व्यक्तिगत सत्र · 1-ऑन-1" : "Everyday Personal Session · 1-on-1"}</span>
+            </div>
+            <h3 className="font-serif text-xl sm:text-2xl text-[#FFFDF8] font-normal leading-snug mb-1.5 group-hover:text-emerald-200 transition-colors">
+              {isHi
+                ? "दैनिक व्यक्तिगत जप एवं ध्यान सत्र"
+                : "Everyday Personal Session of Jaap & Dhyan"}
+            </h3>
+            <p className="text-emerald-100/80 text-xs sm:text-sm leading-relaxed max-w-xl">
+              {isHi
+                ? "प्रतिदिन व्यक्तिगत मार्गदर्शन: मंत्र जप, ध्यान साधना और आत्मिक जागृति हेतु सीधे व्हाट्सएप पर विशाल भैया से जुड़ें।"
+                : "Daily personalized guidance for sacred mantra jaap, deep dhyan, and sadhana alignment directly with Vishal Bhaiya."}
+            </p>
+          </div>
+
+          <div className="flex items-center gap-3 shrink-0">
+            <span className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-[#25D366] hover:bg-[#20BA5A] text-[#08221B] font-bold text-xs sm:text-sm transition-all shadow-lg shadow-emerald-950/40 group-hover:scale-105 cursor-pointer">
+              {/* WhatsApp Icon */}
+              <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86.173.086.275.071.376-.044.101-.116.433-.506.549-.68.116-.173.231-.145.39-.086s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.099.824zm-3.392-10.416c-4.284 0-7.768 3.483-7.768 7.766 0 1.371.357 2.659.979 3.778l-1.25 4.566 4.673-1.226c1.08.59 2.316.924 3.366.924 4.284 0 7.768-3.483 7.768-7.768 0-4.283-3.484-7.768-7.768-7.768z" />
+              </svg>
+              <span>{isHi ? "व्हाट्सएप पर जुड़ें" : "Join via WhatsApp"}</span>
+            </span>
+          </div>
+        </div>
+      </a>
+
       {/* ── Top info grid (3 Clean Tabs) ── */}
       <div
         className="grid grid-cols-1 md:grid-cols-3 gap-[1px] rounded-2xl sm:rounded-[24px] overflow-hidden mb-8 sm:mb-10 border border-ink/8 shadow-sm"
         style={{ background: "rgba(27,24,18,0.08)" }}
       >
-        {/* Tab 1: Ongoing — Clickable to view 41-Day Sadhana */}
+        {/* Tab 1: Ongoing — Latest Sadhana (Var Siddhi Vinayak) */}
         <Link
-          href="/programs/41-day-sadhana"
+          href="/programs/var-siddhi-vinayak-sadhana"
           prefetch={true}
           className="bg-white p-5 sm:p-[26px_24px] flex flex-col justify-between cursor-pointer group transition-all duration-200 hover:bg-amber-50/40 active:bg-amber-50/70 active:scale-[0.99] relative no-underline touch-manipulation select-none"
-          title="Click to view 41-Day Sadhana guide & details"
+          title={isHi ? "वरसिद्धि विनायक साधना विवरण देखें" : "Click to view Var Siddhi Vinayak Sadhana guide & details"}
         >
           <div>
             <div className="flex items-center justify-between gap-2 mb-1.5 sm:mb-2">
-              <span className="text-[0.7rem] sm:text-[0.72rem] tracking-[0.1em] text-gold uppercase font-bold group-hover:text-amber-800 transition-colors">
-                Ongoing · 41-Day Sadhana
+              <span className="text-[0.7rem] sm:text-[0.72rem] tracking-[0.1em] text-[#D57C3B] uppercase font-bold group-hover:text-amber-800 transition-colors flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span>{isHi ? "सक्रिय साधना · 21 दिन" : "Ongoing · 21-Day Sadhana"}</span>
               </span>
             </div>
             <div className="font-serif text-[1.15rem] sm:text-[1.28rem] leading-[1.35] text-ink group-hover:text-amber-950 transition-colors">
-              {fmt(ongoingStart, { day: 'numeric', month: 'short' })} –{' '}
-              {fmt(addDays(ongoingStart, 40), { day: 'numeric', month: 'short' })}
+              {isHi ? "वरसिद्धि विनायक साधना" : "Var Siddhi Vinayak Sadhana"}
             </div>
           </div>
           <div className="mt-3 flex flex-col gap-2">
             <small className="block font-sans text-[0.78rem] sm:text-[0.8rem] text-ink-soft font-normal">
-              Starts 4th Sept · Daily sits, 8:00–9:00 PM (41 Days)
+              {isHi
+                ? "बैच 2024–2026 · ज़ूम/मीट: केवल शनि व रवि (8:00–9:00 PM)"
+                : "Batches 2024–2026 · Zoom/Meet: Sat & Sun only (8:00–9:00 PM)"}
             </small>
             <div className="flex items-center gap-2 flex-wrap">
               <span
@@ -694,7 +783,7 @@ export default function CalendarView({
                 }}
                 className="inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#B8934A] hover:bg-[#99732B] text-white text-xs font-semibold tracking-wide transition-all shadow-xs w-fit cursor-pointer"
               >
-                <span>Join Google Meet</span>
+                <span>{isHi ? "ज़ूम/मीट (शनि-रवि)" : "Zoom / Meet (Sat & Sun)"}</span>
                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                 </svg>
@@ -702,7 +791,7 @@ export default function CalendarView({
               <span
                 className="inline-flex items-center justify-center px-3 py-1.5 rounded-full bg-ink/5 hover:bg-ink/10 text-ink text-xs font-medium tracking-wide transition-all"
               >
-                Details
+                {isHi ? "विवरण" : "Details"}
               </span>
             </div>
           </div>
@@ -761,7 +850,7 @@ export default function CalendarView({
             >
               <span className="text-[0.55rem] sm:text-[0.62rem] uppercase opacity-70">● Amavasya</span>
               <span className="font-serif text-[0.82rem] sm:text-[0.92rem] text-amber-300 font-bold mt-0.5">
-                {monthSacredDates.amavasya.length > 0 ? `${monthSacredDates.amavasya[0]} ${currentDate.toLocaleDateString('en-IN', { month: 'short' })}` : 'Tithi'}
+                {monthSacredDates.amavasya.length > 0 ? `${monthSacredDates.amavasya.join(', ')} ${currentDate.toLocaleDateString('en-IN', { month: 'short' })}` : 'Tithi'}
               </span>
             </div>
 
@@ -773,7 +862,7 @@ export default function CalendarView({
             >
               <span className="text-[0.55rem] sm:text-[0.62rem] uppercase font-bold text-amber-900">○ Purnima</span>
               <span className="font-serif text-[0.82rem] sm:text-[0.92rem] text-ink font-bold mt-0.5">
-                {monthSacredDates.purnima.length > 0 ? `${monthSacredDates.purnima[0]} ${currentDate.toLocaleDateString('en-IN', { month: 'short' })}` : 'Tithi'}
+                {monthSacredDates.purnima.length > 0 ? `${monthSacredDates.purnima.join(', ')} ${currentDate.toLocaleDateString('en-IN', { month: 'short' })}` : 'Tithi'}
               </span>
             </div>
 
@@ -785,7 +874,7 @@ export default function CalendarView({
             >
               <span className="text-[0.55rem] sm:text-[0.62rem] uppercase font-bold text-purple-800">⚡ Ashtami</span>
               <span className="font-serif text-[0.82rem] sm:text-[0.92rem] text-purple-950 font-bold mt-0.5">
-                {monthSacredDates.kaalAshtami.length > 0 ? `${monthSacredDates.kaalAshtami[0]} ${currentDate.toLocaleDateString('en-IN', { month: 'short' })}` : '8th'}
+                {monthSacredDates.kaalAshtami.length > 0 ? `${monthSacredDates.kaalAshtami.join(', ')} ${currentDate.toLocaleDateString('en-IN', { month: 'short' })}` : '8th'}
               </span>
             </div>
           </div>
